@@ -1,0 +1,19 @@
+package {{.Module.Name}}
+import (
+ "net/http"
+ {{if .Module.Operations}}"{{.Project.GoModule}}/internal/{{.Module.Name}}/internal/app"{{end}}
+ {{if endpoints .Module}}"{{.Project.GoModule}}/internal/{{.Module.Name}}/internal/adapter/httpapi"{{end}}
+)
+{{range .Module.Operations}}
+type {{export .Name}}Deps = app.{{export .Name}}Deps
+{{end}}
+type Dependencies struct {
+ {{range .Module.Operations}}{{export .Name}} {{export .Name}}Deps
+ {{end}}
+}
+func Register(mux *http.ServeMux, deps Dependencies) {
+ {{if endpoints .Module}}httpapi.Register(mux, httpapi.Handlers{
+ {{range endpoints .Module}}{{export .Name}}: app.New{{export .Name}}(deps.{{export .Name}}),
+ {{end}}
+ }){{end}}
+}

@@ -1,0 +1,16 @@
+package fault
+
+import (
+	"fmt"
+	"testing"
+)
+
+func TestWrappedKind(t *testing.T) {
+	err := fmt.Errorf("operation: %w", New(Conflict, "already exists"))
+	if !IsKind(err, Conflict) {
+		t.Fatal("lost kind")
+	}
+	if IsKind(err, NotFound) {
+		t.Fatal("wrong kind")
+	}
+}

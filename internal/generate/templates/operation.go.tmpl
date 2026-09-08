@@ -1,0 +1,23 @@
+package app
+
+import (
+ "context"
+ "{{.Project.GoModule}}/internal/platform/fault"
+)
+
+// {{export .Operation.Name}}Deps lists this operation's consumer-owned capabilities.
+// Define small interfaces in this package and inject adapters through this struct.
+type {{export .Operation.Name}}Deps struct {}
+
+type {{export .Operation.Name}} struct { deps {{export .Operation.Name}}Deps }
+func New{{export .Operation.Name}}(deps {{export .Operation.Name}}Deps) *{{export .Operation.Name}} {
+ return &{{export .Operation.Name}}{deps: deps}
+}
+
+func (h *{{export .Operation.Name}}) Execute(ctx context.Context, input {{export .Operation.Name}}Input) ({{export .Operation.Name}}Output, error) {
+ if err := ctx.Err(); err != nil { return {{export .Operation.Name}}Output{}, err }
+ if err := input.Validate(); err != nil { return {{export .Operation.Name}}Output{}, err }
+ // gsvc:pending Implement business rules and the operation's transaction boundary.
+ // Do not invent a successful result, an in-memory database, or an unrequested adapter.
+ return {{export .Operation.Name}}Output{}, fault.ErrNotImplemented
+}

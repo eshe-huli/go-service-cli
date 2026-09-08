@@ -1,0 +1,16 @@
+{
+  "health": {
+    "status": 200,
+    "body": {
+      "status": "ok"
+    }
+  },
+  "greeting": {
+    "status": 200,
+    "body": {
+      "message": "Hello, Ben!"
+    }
+  },
+  "shutdown_exit_code": 0,
+  "stderr": "2026/09/08 15:44:33 INFO service listening service=greeter address=127.0.0.1:56441\n"
+}

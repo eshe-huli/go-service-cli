@@ -1,0 +1,23 @@
+package bootstrap
+
+import (
+ "net/http"
+ "{{.Project.GoModule}}/internal/platform/httpx"
+ {{range .Project.Modules}}"{{$.Project.GoModule}}/internal/{{.Name}}"
+ {{end}}
+)
+
+type Dependencies struct {
+ {{range .Project.Modules}}{{export .Name}} {{.Name}}.Dependencies
+ {{end}}
+}
+
+func NewHandler(deps Dependencies) http.Handler {
+ mux := http.NewServeMux()
+ mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
+  httpx.JSON(w, http.StatusOK, map[string]string{"status":"ok"})
+ })
+ {{range .Project.Modules}}{{.Name}}.Register(mux, deps.{{export .Name}})
+ {{end}}
+ return httpx.Recover(mux)
+}

@@ -1,0 +1,7 @@
+package bootstrap
+import("net/http/httptest";"testing")
+func TestHealth(t *testing.T) {
+ w:=httptest.NewRecorder()
+ NewHandler(Dependencies{}).ServeHTTP(w,httptest.NewRequest("GET","/healthz",nil))
+ if w.Code!=200{t.Fatalf("health status=%d",w.Code)}
+}

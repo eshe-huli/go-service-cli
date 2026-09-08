@@ -1,0 +1,24 @@
+package app
+{{if validatable .Operation.Input}}
+import (
+ {{if hastype .Operation.Input "string"}}"strings"{{end}}
+ "{{.Project.GoModule}}/internal/platform/fault"
+ {{if hastype .Operation.Input "money"}}"{{.Project.GoModule}}/internal/platform/validate"{{end}}
+)
+{{end}}
+type {{export .Operation.Name}}Input struct {
+ {{range .Operation.Input}}{{export .Name}} {{gotype .Type}} `json:"{{.Name}}"`
+ {{end}}
+}
+type {{export .Operation.Name}}Output struct {
+ {{range .Operation.Output}}{{export .Name}} {{gotype .Type}} `json:"{{.Name}}"`
+ {{end}}
+}
+func (in {{export .Operation.Name}}Input) Validate() error {
+ {{range .Operation.Input}}{{if eq .Type "string"}}
+ if strings.TrimSpace(in.{{export .Name}}) == "" { return fault.New(fault.Invalid, "{{.Name}} is required") }
+ {{else if eq .Type "money"}}
+ if !validate.Decimal(in.{{export .Name}}) { return fault.New(fault.Invalid, "{{.Name}} must be a decimal string") }
+ {{end}}{{end}}
+ return nil
+}

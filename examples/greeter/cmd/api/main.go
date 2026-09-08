@@ -1,0 +1,67 @@
+package main
+
+import (
+	"context"
+	"errors"
+	"log/slog"
+	"net"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"example.com/greeter/internal/bootstrap"
+)
+
+func main() {
+	if err := run(); err != nil {
+		slog.Error("service stopped", "error", err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+	deps, closeDeps, err := bootstrap.Wire(ctx)
+	if err != nil {
+		return err
+	}
+	defer closeDeps()
+	addr := os.Getenv("HTTP_ADDR")
+	if addr == "" {
+		addr = "127.0.0.1:8080"
+	}
+	if _, _, err := net.SplitHostPort(addr); err != nil {
+		return err
+	}
+	srv := &http.Server{
+		Addr: addr, Handler: bootstrap.NewHandler(deps),
+		ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 15 * time.Second,
+		WriteTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
+	listener, err := net.Listen("tcp", addr)
+	if err != nil {
+		return err
+	}
+	stopped := make(chan error, 1)
+	go func() { stopped <- srv.Serve(listener) }()
+	slog.Info("service listening", "service", "greeter", "address", addr)
+	select {
+	case err := <-stopped:
+		if errors.Is(err, http.ErrServerClosed) {
+			return nil
+		}
+		return err
+	case <-ctx.Done():
+		shutdown, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		if err := srv.Shutdown(shutdown); err != nil {
+			_ = srv.Close()
+			return err
+		}
+		return nil
+	}
+}

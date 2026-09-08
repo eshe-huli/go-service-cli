@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "tool": "gsvc",
+  "version": "0.1.0",
+  "ok": true,
+  "command": "check",
+  "data": {
+    "check": {
+      "ok": true,
+      "files_checked": 22,
+      "errors": 0,
+      "warnings": 0,
+      "diagnostics": []
+    },
+    "verification": [
+      {
+        "command": [
+          "go",
+          "test",
+          "./..."
+        ],
+        "exit_code": 0,
+        "output": "?   \texample.com/greeter/cmd/api\t[no test files]\n?   \texample.com/greeter/internal/greetings\t[no test files]\n?   \texample.com/greeter/internal/greetings/internal/adapter/postgres\t[no test files]\nok  \texample.com/greeter/internal/bootstrap\t0.017s\nok  \texample.com/greeter/internal/greetings/internal/adapter/httpapi\t0.014s\nok  \texample.com/greeter/internal/greetings/internal/app\t0.013s\nok  \texample.com/greeter/internal/greetings/internal/domain\t0.006s\nok  \texample.com/greeter/internal/platform/fault\t0.004s\nok  \texample.com/greeter/internal/platform/httpx\t0.015s\nok  \texample.com/greeter/internal/platform/validate\t0.008s\n",
+        "truncated": false
+      },
+      {
+        "command": [
+          "go",
+          "vet",
+          "./..."
+        ],
+        "exit_code": 0,
+        "output": "",
+        "truncated": false
+      }
+    ]
+  }
+}

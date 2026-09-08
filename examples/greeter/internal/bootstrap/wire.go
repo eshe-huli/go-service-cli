@@ -1,0 +1,14 @@
+package bootstrap
+
+import "context"
+
+// Wire is the explicit composition root. Initialize adapters here and pass each
+// operation only the capabilities its own dependency struct requires. No globals,
+// runtime service locator, reflection container, or implicit module discovery.
+func Wire(ctx context.Context) (Dependencies, func(), error) {
+	if err := ctx.Err(); err != nil {
+		return Dependencies{}, nil, err
+	}
+	deps := Dependencies{}
+	return deps, func() {}, nil
+}

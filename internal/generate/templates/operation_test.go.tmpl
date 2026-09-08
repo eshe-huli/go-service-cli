@@ -1,0 +1,18 @@
+package app
+
+import (
+ "context"
+ "errors"
+ "testing"
+)
+
+func Test{{export .Operation.Name}}CanceledContext(t *testing.T) {
+ ctx, cancel := context.WithCancel(context.Background())
+ cancel()
+ _, err := New{{export .Operation.Name}}({{export .Operation.Name}}Deps{}).Execute(ctx, {{export .Operation.Name}}Input{})
+ if !errors.Is(err, context.Canceled) { t.Fatalf("expected cancellation, got %v", err) }
+}
+
+func Test{{export .Operation.Name}}BusinessBehavior(t *testing.T) {
+ t.Skip("gsvc:pending Replace this scaffold with business success, failure, and boundary tests.")
+}

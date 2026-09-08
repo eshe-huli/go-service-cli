@@ -1,0 +1,29 @@
+package httpapi
+
+import (
+ "context"
+ "net/http"
+ "net/http/httptest"
+ "strings"
+ "testing"
+ "{{.Project.GoModule}}/internal/{{.Module.Name}}/internal/app"
+)
+{{range endpoints .Module}}
+type fake{{export .Name}} struct { called bool; input app.{{export .Name}}Input }
+func (f *fake{{export .Name}}) Execute(_ context.Context, in app.{{export .Name}}Input) (app.{{export .Name}}Output, error) {
+ f.called = true; f.input = in
+ return app.{{export .Name}}Output{}, nil
+}
+func Test{{export .Name}}Binding(t *testing.T) {
+ fake := &fake{{export .Name}}{}
+ mux := http.NewServeMux()
+ Register(mux, Handlers{ {{export .Name}}: fake })
+ r := httptest.NewRequest("{{.Endpoint.Method}}", {{quote (sampleurl .)}}, strings.NewReader({{quote (samplebody .)}}))
+ r.Header.Set("Content-Type", "application/json")
+ w := httptest.NewRecorder()
+ mux.ServeHTTP(w,r)
+ if w.Code != 200 || !fake.called { t.Fatalf("status=%d body=%s called=%v", w.Code,w.Body.String(),fake.called) }
+ {{range .Input}}if fake.input.{{export .Name}} != {{samplego .}} { t.Errorf("field {{.Name}} was not bound") }
+ {{end}}
+}
+{{end}}

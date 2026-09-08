@@ -1,0 +1,455 @@
+{
+  "schema_version": 1,
+  "tool": "gsvc",
+  "version": "0.1.0",
+  "ok": true,
+  "command": "contract",
+  "data": {
+    "commands": [
+      {
+        "name": "version",
+        "description": "Show the CLI and policy version",
+        "mutation": false,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          }
+        ]
+      },
+      {
+        "name": "contract",
+        "description": "Describe supported commands, flags, invariants, and exit codes",
+        "mutation": false,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          }
+        ]
+      },
+      {
+        "name": "init",
+        "description": "Create a standalone Go service in an empty directory",
+        "argument": "directory",
+        "mutation": true,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "module",
+            "type": "string",
+            "description": "Go import path, e.g. example.com/payments-api",
+            "required": true
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "description": "Service name (default: directory basename)"
+          },
+          {
+            "name": "dry-run",
+            "type": "boolean",
+            "description": "Plan without writing"
+          },
+          {
+            "name": "expect",
+            "type": "string",
+            "description": "Require the reviewed plan ID"
+          }
+        ]
+      },
+      {
+        "name": "add module",
+        "description": "Create one business module with enforced internal boundaries",
+        "argument": "name",
+        "mutation": true,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "root",
+            "type": "string",
+            "description": "Project directory (default: find from current directory)"
+          },
+          {
+            "name": "dry-run",
+            "type": "boolean",
+            "description": "Plan without writing"
+          },
+          {
+            "name": "expect",
+            "type": "string",
+            "description": "Require the exact reviewed plan ID"
+          }
+        ]
+      },
+      {
+        "name": "add command",
+        "description": "Add a typed write operation, dependency struct, contract and tests",
+        "argument": "name",
+        "mutation": true,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "root",
+            "type": "string",
+            "description": "Project directory (default: find from current directory)"
+          },
+          {
+            "name": "dry-run",
+            "type": "boolean",
+            "description": "Plan without writing"
+          },
+          {
+            "name": "expect",
+            "type": "string",
+            "description": "Require the exact reviewed plan ID"
+          },
+          {
+            "name": "module",
+            "type": "string",
+            "description": "Existing business module",
+            "required": true
+          },
+          {
+            "name": "in",
+            "type": "string",
+            "description": "Required inputs: amount:money,currency:string"
+          },
+          {
+            "name": "out",
+            "type": "string",
+            "description": "Outputs: payment_id:string"
+          }
+        ]
+      },
+      {
+        "name": "add query",
+        "description": "Add a typed read operation, dependency struct, contract and tests",
+        "argument": "name",
+        "mutation": true,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "root",
+            "type": "string",
+            "description": "Project directory (default: find from current directory)"
+          },
+          {
+            "name": "dry-run",
+            "type": "boolean",
+            "description": "Plan without writing"
+          },
+          {
+            "name": "expect",
+            "type": "string",
+            "description": "Require the exact reviewed plan ID"
+          },
+          {
+            "name": "module",
+            "type": "string",
+            "description": "Existing business module",
+            "required": true
+          },
+          {
+            "name": "in",
+            "type": "string",
+            "description": "Required inputs: id:string"
+          },
+          {
+            "name": "out",
+            "type": "string",
+            "description": "Outputs: id:string,status:string"
+          }
+        ]
+      },
+      {
+        "name": "add endpoint",
+        "description": "Bind an existing operation (POST command / GET query)",
+        "argument": "operation",
+        "mutation": true,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "root",
+            "type": "string",
+            "description": "Project directory (default: find from current directory)"
+          },
+          {
+            "name": "dry-run",
+            "type": "boolean",
+            "description": "Plan without writing"
+          },
+          {
+            "name": "expect",
+            "type": "string",
+            "description": "Require the exact reviewed plan ID"
+          },
+          {
+            "name": "module",
+            "type": "string",
+            "description": "Existing business module",
+            "required": true
+          },
+          {
+            "name": "path",
+            "type": "string",
+            "description": "HTTP path, e.g. /payments or /payments/{id}",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "change operation",
+        "description": "Explicitly change operation fields; preserve business implementations and tests",
+        "argument": "name",
+        "mutation": true,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "root",
+            "type": "string",
+            "description": "Project directory (default: find from current directory)"
+          },
+          {
+            "name": "dry-run",
+            "type": "boolean",
+            "description": "Plan without writing"
+          },
+          {
+            "name": "expect",
+            "type": "string",
+            "description": "Require the exact reviewed plan ID"
+          },
+          {
+            "name": "module",
+            "type": "string",
+            "description": "Existing business module",
+            "required": true
+          },
+          {
+            "name": "in",
+            "type": "string",
+            "description": "Replace inputs; omit to preserve, empty string to clear"
+          },
+          {
+            "name": "out",
+            "type": "string",
+            "description": "Replace outputs; omit to preserve, empty string to clear"
+          }
+        ]
+      },
+      {
+        "name": "change endpoint",
+        "description": "Explicitly change an existing route path; preserve operation behavior",
+        "argument": "operation",
+        "mutation": true,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "root",
+            "type": "string",
+            "description": "Project directory (default: find from current directory)"
+          },
+          {
+            "name": "dry-run",
+            "type": "boolean",
+            "description": "Plan without writing"
+          },
+          {
+            "name": "expect",
+            "type": "string",
+            "description": "Require the exact reviewed plan ID"
+          },
+          {
+            "name": "module",
+            "type": "string",
+            "description": "Existing business module",
+            "required": true
+          },
+          {
+            "name": "path",
+            "type": "string",
+            "description": "New endpoint path",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "sync",
+        "description": "Reconcile managed output without overwriting developer-owned code",
+        "mutation": true,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "root",
+            "type": "string",
+            "description": "Project directory (default: find from current directory)"
+          },
+          {
+            "name": "dry-run",
+            "type": "boolean",
+            "description": "Plan without writing"
+          },
+          {
+            "name": "expect",
+            "type": "string",
+            "description": "Require the exact reviewed plan ID"
+          }
+        ]
+      },
+      {
+        "name": "inspect",
+        "description": "Expose the live project model, ownership, policy and diagnostics",
+        "mutation": false,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "root",
+            "type": "string",
+            "description": "Project directory (default: find from current directory)"
+          }
+        ]
+      },
+      {
+        "name": "check",
+        "description": "Check generated integrity, layout, imports, formatting and pending work",
+        "mutation": false,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "root",
+            "type": "string",
+            "description": "Project directory (default: find from current directory)"
+          },
+          {
+            "name": "strict",
+            "type": "boolean",
+            "description": "Fail on pending scaffolds and test skips"
+          },
+          {
+            "name": "verify",
+            "type": "boolean",
+            "description": "Also execute go test ./... and go vet ./..."
+          },
+          {
+            "name": "race",
+            "type": "boolean",
+            "description": "Use go test -race; requires --verify"
+          }
+        ]
+      },
+      {
+        "name": "recover",
+        "description": "Roll back an interrupted CLI write without overwriting unrelated edits",
+        "mutation": true,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "root",
+            "type": "string",
+            "description": "Project directory (default: find from current directory)"
+          },
+          {
+            "name": "dry-run",
+            "type": "boolean",
+            "description": "List recovery targets without writing"
+          }
+        ]
+      }
+    ],
+    "exit_codes": {
+      "0": "success",
+      "1": "check or execution failure",
+      "2": "invalid command or configuration",
+      "3": "ownership, plan, lock, or recovery conflict"
+    },
+    "field_types": [
+      "string",
+      "money",
+      "bool",
+      "int64"
+    ],
+    "guarantees": [
+      "no interactive prompts",
+      "no shell execution or downloads during generation",
+      "JSON mode emits one envelope, including failures",
+      "dry-run does not create files",
+      "identical structural commands are idempotent",
+      "add rejects changed existing contracts; change performs explicit contract regeneration without migrating business behavior"
+    ],
+    "policy": {
+      "application": "own domain/application packages and platform fault/validate; no transport, persistence, filesystem, or peer business imports",
+      "composition": "ordinary constructors, operation-specific dependency structs, bootstrap.Wire",
+      "cross_module": "consumer-owned interfaces injected at composition; no direct peer module imports",
+      "domain": "permitted standard-library packages only; no framework, transport, database, filesystem, or peer business imports",
+      "global_checks": [
+        "no init() wiring",
+        "no unsafe, cgo, or plugin imports",
+        "generated content must match canonical output",
+        "no nested go.mod",
+        "gofmt",
+        "strict mode rejects pending scaffolds and test skips"
+      ],
+      "id": "go-service/v1",
+      "layout": "cmd/api; internal/bootstrap; internal/\u003cbusiness\u003e/internal/{domain,app,adapter/{httpapi,postgres}}",
+      "limitations": [
+        "structural checks do not prove business correctness, authorization, transactional safety, or concurrency safety",
+        "not a sandbox or defense against deliberate checker/CI edits",
+        "generated API is unauthenticated and loopback-only by default",
+        "explicit contract regeneration is supported; business-behavior migrations and CLI-version upgrades are not automatic"
+      ],
+      "ownership": "CLI owns contracts, routes, generated wiring, runtime and agent instructions; developers own behavior, ports, adapters and business tests",
+      "persistence": "postgres adapter; pgx/v5 import family allowed; adapter and SQL generation not yet supplied",
+      "transport": "net/http; GET queries; POST commands; JSON; explicit generated registration"
+    },
+    "schema_version": 1,
+    "tool": "gsvc",
+    "version": "0.1.0"
+  }
+}

@@ -1,0 +1,29 @@
+// Package fault classifies application failures without importing HTTP types.
+package fault
+
+import "errors"
+
+type Kind string
+
+const (
+	Invalid         Kind = "invalid_input"
+	NotFound        Kind = "not_found"
+	Conflict        Kind = "conflict"
+	Forbidden       Kind = "forbidden"
+	Unauthenticated Kind = "unauthenticated"
+	NotImplemented  Kind = "not_implemented"
+)
+
+// Error.Message is safe for client display. Never put secrets or raw database
+// errors here; wrap unexpected errors normally and the transport hides details.
+type Error struct {
+	Kind    Kind
+	Message string
+}
+
+func (e *Error) Error() string            { return string(e.Kind) + ": " + e.Message }
+func New(kind Kind, message string) error { return &Error{Kind: kind, Message: message} }
+
+var ErrNotImplemented = New(NotImplemented, "operation is not implemented")
+
+func IsKind(err error, kind Kind) bool { var e *Error; return errors.As(err, &e) && e.Kind == kind }
