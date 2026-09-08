@@ -42,4 +42,3 @@ The analyzer returned 34 pre-existing maintainability findings, all classified C
 | `internal/assets/runtime/httpx/httpx.go` | 25 | go:S3776 | Refactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed. |
 
 The archive hash and actual macOS checks are recorded in `INSTALLATION.md`. Preserve the original archive as the comparison baseline when making a correction; do not adjust ownership hashes or completion checks to silence failures.
-

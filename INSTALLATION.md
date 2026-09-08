@@ -70,7 +70,11 @@ recovery review. Authentication/preflight passed with installed Grok 1.0.13,
 but inference did not start: its sandbox rejected the Docker runtime socket
 symlink. Protections were not weakened; no verdict or patch was produced.
 The temporary credential home is absent after exit cleanup, and the owner CLI
-reports the exact attempted session absent. Independent review remains open.
+reports the exact attempted session absent from local storage. The original
+remote-deletion request failed DNS resolution; remote deletion was not proved.
+Keep this attempt cleanup-blocked for remote confirmation, not a completed
+review: session `e9e26958-4d03-4d26-8dcf-7be34633d9a4`. No local credential home,
+child process or review worktree is retained. Independent review remains open.
 
 ## Boundaries
 
