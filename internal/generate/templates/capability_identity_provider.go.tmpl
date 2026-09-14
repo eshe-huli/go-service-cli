@@ -1,0 +1,192 @@
+package identityprovider
+
+import (
+	"context"
+	"errors"
+	"strings"
+	"time"
+)
+
+type WriteFence struct {
+	ProviderInstanceID string
+	Environment        string
+	OperationID        string
+	IdempotencyKey     string
+	WriterHolder       string
+	WriterEpoch        uint64
+	LeaseToken         string
+	LeaseAcquiredAt    time.Time
+	LeaseExpiresAt     time.Time
+}
+
+func (f WriteFence) Validate(now time.Time) error {
+	if strings.TrimSpace(f.ProviderInstanceID) == "" || strings.TrimSpace(f.Environment) == "" {
+		return errors.New("provider instance and environment are required")
+	}
+	if strings.TrimSpace(f.OperationID) == "" || strings.TrimSpace(f.IdempotencyKey) == "" {
+		return errors.New("operation and idempotency ids are required")
+	}
+	if strings.TrimSpace(f.WriterHolder) == "" || f.WriterEpoch == 0 || strings.TrimSpace(f.LeaseToken) == "" {
+		return errors.New("current writer holder, epoch, and lease token are required")
+	}
+	if now.IsZero() || f.LeaseAcquiredAt.IsZero() || f.LeaseExpiresAt.IsZero() || !f.LeaseAcquiredAt.Before(f.LeaseExpiresAt) {
+		return errors.New("current time and a valid lease interval are required")
+	}
+	if now.Before(f.LeaseAcquiredAt) || !now.Before(f.LeaseExpiresAt) {
+		return errors.New("provider write fence is not active")
+	}
+	return nil
+}
+
+type OrganizationDesiredState struct {
+	BindingKey        string
+	BusinessReference string
+	DisplayName       string
+	Active            bool
+	SourceVersion     int64
+}
+
+type OrganizationSubjectMode string
+
+const (
+	OrganizationSubjectModeLocal OrganizationSubjectMode = "ORG_LOCAL"
+	OrganizationSubjectModeSSO   OrganizationSubjectMode = "ORG_SSO"
+)
+
+func (m OrganizationSubjectMode) Validate() error {
+	switch m {
+	case OrganizationSubjectModeLocal, OrganizationSubjectModeSSO:
+		return nil
+	default:
+		return errors.New("organization subject mode must be ORG_LOCAL or ORG_SSO")
+	}
+}
+
+// SubjectReservation is issued by the canonical identity authority. Provider
+// adapters must commit the exact reservation and fence after verified writeback.
+type SubjectReservation struct {
+	ReservationID     string
+	FenceToken        string
+	IdentityID        string
+	MembershipID      string
+	BusinessReference string
+	Mode              OrganizationSubjectMode
+	BindingGeneration int64
+	ExpiresAt         time.Time
+}
+
+func (r SubjectReservation) Validate(now time.Time) error {
+	if strings.TrimSpace(r.ReservationID) == "" || strings.TrimSpace(r.FenceToken) == "" {
+		return errors.New("reservation and fence ids are required")
+	}
+	if strings.TrimSpace(r.IdentityID) == "" || strings.TrimSpace(r.MembershipID) == "" || strings.TrimSpace(r.BusinessReference) == "" {
+		return errors.New("identity, membership, and business references are required")
+	}
+	if r.BindingGeneration < 1 || now.IsZero() || r.ExpiresAt.IsZero() || !now.Before(r.ExpiresAt) {
+		return errors.New("binding generation and an active reservation are required")
+	}
+	return r.Mode.Validate()
+}
+
+type SubjectProfile struct {
+	DisplayName string
+	Email       string
+	Phone       string
+}
+
+type SubjectDesiredState struct {
+	BindingKey    string
+	Reservation   SubjectReservation
+	Profile       SubjectProfile
+	Active        bool
+	SourceVersion int64
+}
+
+func (s SubjectDesiredState) Validate(now time.Time) error {
+	if strings.TrimSpace(s.BindingKey) == "" || s.SourceVersion < 0 {
+		return errors.New("subject binding key and source version are required")
+	}
+	return s.Reservation.Validate(now)
+}
+
+// ExternalSubjectAuthorization references a subject already committed in its
+// home organization. It is deliberately separate from SubjectDesiredState so
+// EXTERNAL_HOME_ORG can never enter the organization-local subject creation
+// path. The adapter may project target authorization but must not create or
+// duplicate the provider subject.
+type ExternalSubjectAuthorization struct {
+	BindingKey              string
+	IdentityID              string
+	MembershipID            string
+	HomeBusinessReference   string
+	TargetBusinessReference string
+	ProviderSubjectID       string
+	Active                   bool
+	SourceVersion            int64
+}
+
+func (a ExternalSubjectAuthorization) Validate() error {
+	if strings.TrimSpace(a.BindingKey) == "" || strings.TrimSpace(a.IdentityID) == "" || strings.TrimSpace(a.MembershipID) == "" {
+		return errors.New("external binding, identity, and membership ids are required")
+	}
+	if strings.TrimSpace(a.HomeBusinessReference) == "" || strings.TrimSpace(a.TargetBusinessReference) == "" || strings.TrimSpace(a.ProviderSubjectID) == "" {
+		return errors.New("home, target, and existing provider subject references are required")
+	}
+	if a.HomeBusinessReference == a.TargetBusinessReference || a.SourceVersion < 0 {
+		return errors.New("external authorization requires distinct businesses and a source version")
+	}
+	return nil
+}
+
+// RoleSnapshot replaces the complete authoritative organization role set. It
+// is not an additive grant delta and does not make the provider the policy owner.
+type RoleSnapshot struct {
+	SubjectBindingKey string
+	BusinessReference string
+	RoleKeys          []string
+	SourceVersion     int64
+}
+
+// ServiceBoundaryGrant projects Service Access authority to a neutral provider
+// resource boundary. Concrete adapters map boundaries to provider concepts such
+// as projects, realms, resource servers, and static clients.
+type ServiceBoundaryGrant struct {
+	BindingKey        string
+	BusinessReference string
+	ServiceID         string
+	BoundaryKey       string
+	Active            bool
+	SourceVersion     int64
+}
+
+type ClientDescriptor struct {
+	ClientKey   string
+	BoundaryKey string
+	ClientID    string
+}
+
+type WriteResult struct {
+	ProviderResourceID string
+	ProviderVersion    string
+	ProviderRequestID  string
+	NormalizedReadbackHash string
+	WriterEpoch        uint64
+	ObservedAt         time.Time
+}
+
+type Readback struct {
+	ProviderResourceID string
+	Active             bool
+	ObservedVersion    int64
+	ObservedAt         time.Time
+}
+
+type Adapter interface {
+	ProviderKey() string
+	UpsertOrganization(context.Context, OrganizationDesiredState, WriteFence) (WriteResult, error)
+	UpsertSubject(context.Context, SubjectDesiredState, WriteFence) (WriteResult, error)
+	SetExternalSubjectAuthorization(context.Context, ExternalSubjectAuthorization, WriteFence) (WriteResult, error)
+	ReplaceRoleSnapshot(context.Context, RoleSnapshot, WriteFence) (WriteResult, error)
+	SetServiceBoundaryGrant(context.Context, ServiceBoundaryGrant, WriteFence) (WriteResult, error)
+	Readback(context.Context, string, string) (Readback, error)
+}

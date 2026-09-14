@@ -9,10 +9,11 @@ The CLI owns structural decisions. Developers and agents own business behavior.
 Generated services are ordinary Go: explicit constructors, typed application calls,
 standard HTTP interfaces, and no reflection-based dependency injection container.
 
-**Status: v0.1.0 foundation.** Scaffolding, explicit contract updates, ownership-safe
-writes, machine-readable discovery, drift checks, and a working example are implemented.
-Authentication, authorization, database/SQL generation, and message delivery are not.
-No claim is made that the foundation is ready to expose to a public network.
+**Status: v0.2.0 foundation.** Scaffolding, explicit contract updates, ownership-safe
+writes, typed capability recipes, machine-readable discovery, drift checks, and a
+working example are implemented. Capability recipes generate contracts, not working
+authentication, authorization, database, broker, or provider adapters. No claim is
+made that the foundation is ready to expose to a public network.
 
 ## Install from this source distribution
 
@@ -90,6 +91,55 @@ Generation does not execute shell scripts or fetch dependencies. Explicit `--ver
 executes project tests and Go tooling; it is not a sandbox and Go may fetch declared
 dependencies according to the environment's normal settings.
 
+## Apply typed capability recipes
+
+Recipes are deterministic, versioned compositions over the same guarded project model.
+They never run plugins, install dependencies, or persist a second recipe-state file.
+
+```sh
+# List the catalog without requiring a service directory.
+gsvc recipe --json
+
+# Review the exact manifest and generated contract changes.
+gsvc recipe identity-provider-orchestrator --root ../identity-provider \
+  --dry-run --json
+
+# Apply only the reviewed plan.
+gsvc recipe identity-provider-orchestrator --root ../identity-provider \
+  --expect '<reviewed-plan-id>' --json
+
+# Inspect declarations and the work still required for runtime truth.
+gsvc capabilities --root ../identity-provider --json
+```
+
+The initial `identity-provider-orchestrator` recipe is provider-neutral. It declares
+service-runtime, verified-command-context, transactional-inbox, operation-journal,
+identity-provider-port, and fenced-reconciliation contracts. A concrete ZITADEL,
+Keycloak, or other adapter remains developer-owned. Kafka and PostgreSQL libraries,
+credentials, migrations, workers, authorization decisions, and provider writes are
+not installed or claimed by the recipe. Status `declared` means only that the
+capability is in the manifest; the command's separate `contract_check` verifies the
+canonical files and source integrity, then lists the remaining operational evidence.
+
+Each capability advertises one exact application import plus narrow developer-owned
+extension roots. Only external import families explicitly listed for that root pass
+the checker. For example, the inbox capability permits franz-go only below its Kafka
+adapter root, standard-library HTTP only below its HTTP root, and pgx only below its
+PostgreSQL root; declaring a capability does not open the general platform tree or
+allow an arbitrary SDK. Capability dependencies are explicit and validated:
+reconciliation requires the operation journal, so a hand-written incomplete manifest
+is rejected before rendering.
+
+`gsvc check --verify --strict` is a source-structure gate. Declared capabilities emit
+`CAPABILITY004` warnings even when that gate passes because adapter integration,
+adverse-state, deployed-revision, and authorized-actor proof are external facts. A
+green process exit must not be reported as operational capability completion.
+
+`gsvc upgrade` provides the explicit, ownership-checked migration from the v0.1 project
+contract to v0.2. Review it with `--dry-run --json`, bind the result with `--expect`,
+and commit the manifest, ownership metadata, and regenerated managed output together.
+Other source versions are rejected instead of guessed.
+
 ## Change a contract explicitly
 
 `add` is idempotent for identical requests and rejects accidental changes to existing
@@ -110,7 +160,8 @@ Omit `--in` or `--out` to preserve that side. Pass an empty value to clear it.
 Existing implementation and business test files are preserved. Contract updates may
 require you or the agent to update behavior and tests; this is not an automatic
 business migration. Routes are validated against the new input contract before any
-write. CLI-version upgrades and removal of modules/operations are not yet implemented.
+write. Removal of modules/operations and upgrades other than the documented v0.1 to
+v0.2 project migration are not implemented.
 
 ## What is enforced
 
@@ -178,5 +229,7 @@ architectural drift, exercise stale plans and ownership conflicts, and demonstra
 that a real implemented operation passes the strict gate. Runtime helpers also have
 independent tests. `docs/validation.md` records this distribution's actual checks.
 
-Before publishing, choose the real repository/import path and project license.
-Source CI is included; no remote repository, release, or branch protection was created.
+The canonical source remote is `github.com/eshe-huli/go-service-cli`, while the Go
+module identity remains deliberately local until a public module path and license are
+approved. Source CI is included. No tagged release, published Go module, or required
+branch-protection rule is claimed by this source tree.

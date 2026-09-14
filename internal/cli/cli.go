@@ -68,6 +68,9 @@ func Run(ctx context.Context, args []string, out, errout io.Writer) int {
 				exit = 3
 			}
 		}
+		if failure.Code == "RECIPE002" {
+			exit = 3
+		}
 	}
 	if jsonMode {
 		e := envelope{SchemaVersion: 1, Tool: "gsvc", Version: project.Version, OK: exit == 0, Command: p.Spec.Name, Data: value, Error: failure}
@@ -92,6 +95,9 @@ func Run(ctx context.Context, args []string, out, errout io.Writer) int {
 			action = "Planned"
 		}
 		fmt.Fprintf(out, "%s %s\nPlan %s\n", action, v.Plan.Root, v.Plan.ID)
+		if v.Recipe != nil {
+			fmt.Fprintf(out, "Recipe %s@%d (%d capability contracts)\n", v.Recipe.Name, v.Recipe.Version, len(v.Recipe.Capabilities))
+		}
 		count := 0
 		for _, c := range v.Plan.Changes {
 			if c.Action == "create" || c.Action == "update" {
@@ -118,8 +124,9 @@ func Run(ctx context.Context, args []string, out, errout io.Writer) int {
 }
 
 type mutationResult struct {
-	DryRun bool         `json:"dry_run"`
-	Plan   project.Plan `json:"plan"`
+	DryRun bool                       `json:"dry_run"`
+	Plan   project.Plan               `json:"plan"`
+	Recipe *project.RecipeApplication `json:"recipe,omitempty"`
 }
 type execution struct {
 	Command   []string `json:"command"`
@@ -141,6 +148,10 @@ func execute(ctx context.Context, p parsed) (any, int, error) {
 		return map[string]any{"version": project.Version, "policy": project.Policy, "schema_version": project.SchemaVersion}, 0, nil
 	case "contract":
 		return contract(), 0, nil
+	case "recipe":
+		if p.Arg == "" {
+			return map[string]any{"recipes": project.RecipeCatalog(), "capabilities": project.CapabilityCatalog(), "maturity": project.CapabilityMaturity}, 0, nil
+		}
 	case "init":
 		root, err := project.Root(p.Arg)
 		if err != nil {
@@ -177,11 +188,28 @@ func execute(ctx context.Context, p parsed) (any, int, error) {
 	if err != nil {
 		return nil, 2, err
 	}
+	if p.Spec.Name == "upgrade" {
+		l, _, err := project.LoadForUpgrade(root)
+		if err != nil {
+			return nil, 2, err
+		}
+		return mutate(root, l.Manifest, &l.State, p)
+	}
 	l, err := project.Load(root)
 	if err != nil {
 		return nil, 2, err
 	}
 	switch p.Spec.Name {
+	case "capabilities":
+		contractCheck, err := check.Run(l, false)
+		if err != nil {
+			return nil, 1, err
+		}
+		exit := 0
+		if !contractCheck.OK {
+			exit = 1
+		}
+		return map[string]any{"root": root, "declared": l.Manifest.Capabilities, "assessments": project.AssessCapabilities(l.Manifest), "declared_recipe_compositions": project.DeclaredRecipeCompositions(l.Manifest), "maturity": project.CapabilityMaturity, "contract_check": contractCheck}, exit, nil
 	case "inspect":
 		r, err := check.Run(l, false)
 		if err != nil {
@@ -191,7 +219,7 @@ func execute(ctx context.Context, p parsed) (any, int, error) {
 		if err != nil {
 			return nil, 1, err
 		}
-		return map[string]any{"root": root, "project": l.Manifest, "ownership": l.State.Files, "source_files": files, "policy": project.PolicyDescription(), "check": r, "next_commands": []string{"gsvc add command NAME --module MODULE --in ... --out ... --dry-run --json", "gsvc check --verify --strict --json"}}, 0, nil
+		return map[string]any{"root": root, "project": l.Manifest, "capabilities": project.AssessCapabilities(l.Manifest), "declared_recipe_compositions": project.DeclaredRecipeCompositions(l.Manifest), "ownership": l.State.Files, "source_files": files, "policy": project.PolicyDescription(), "check": r, "next_commands": []string{"gsvc recipe --json", "gsvc recipe NAME --dry-run --json", "gsvc add command NAME --module MODULE --in ... --out ... --dry-run --json", "gsvc check --verify --strict --json"}}, 0, nil
 	case "check":
 		report, err := check.Run(l, p.Values["strict"] == "true")
 		if err != nil {
@@ -300,6 +328,18 @@ func execute(ctx context.Context, p parsed) (any, int, error) {
 			}
 		}
 	case "sync":
+	case "recipe":
+		manifest, application, err := project.ApplyRecipe(l.Manifest, p.Arg)
+		if err != nil {
+			return nil, 2, err
+		}
+		value, exit, err := mutate(root, manifest, &l.State, p)
+		if err != nil {
+			return value, exit, err
+		}
+		result := value.(mutationResult)
+		result.Recipe = &application
+		return result, exit, nil
 	default:
 		return nil, 2, project.Fail("USAGE001", "unsupported command", "")
 	}

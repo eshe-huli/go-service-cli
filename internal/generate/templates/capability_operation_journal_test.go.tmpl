@@ -1,0 +1,51 @@
+package operationjournal
+
+import (
+	"testing"
+	"time"
+)
+
+const testBusinessReference = "business-1"
+
+func TestDeterministicID(t *testing.T) {
+	first := DeterministicID("provider", "organization", testBusinessReference, 7)
+	second := DeterministicID("provider", "organization", testBusinessReference, 7)
+	if first == "" || first != second {
+		t.Fatal("same desired state did not produce a stable operation id")
+	}
+	if first == DeterministicID("provider", "organization", testBusinessReference, 8) {
+		t.Fatal("desired-state version was not part of the operation id")
+	}
+}
+
+func TestCompletionRejectsStaleFence(t *testing.T) {
+	now := time.Date(2026, time.September, 14, 12, 0, 0, 0, time.UTC)
+	operation := Operation{ID: "operation-1", State: StateApplying}
+	oldClaim := Claim{Operation: operation, Fence: WriterFence{HolderID: "worker-1", Token: "token-1", Epoch: 1, AcquiredAt: now.Add(-time.Second), ExpiresAt: now.Add(time.Minute)}}
+	completion, err := NewCompletion(oldClaim, Outcome{Kind: OutcomeApplied}, now)
+	if err != nil {
+		t.Fatalf("NewCompletion() error = %v", err)
+	}
+	current := Claim{Operation: operation, Fence: WriterFence{HolderID: "worker-2", Token: "token-2", Epoch: 2, AcquiredAt: now.Add(-time.Second), ExpiresAt: now.Add(time.Minute)}}
+	if err = completion.ValidateAgainst(current, now); err == nil {
+		t.Fatal("stale writer completion passed the current fence")
+	}
+	if err = completion.ValidateAgainst(oldClaim, now); err != nil {
+		t.Fatalf("current writer completion rejected: %v", err)
+	}
+}
+
+func TestCompletionRejectsExpiredAndInvalidOutcomes(t *testing.T) {
+	now := time.Date(2026, time.September, 14, 12, 0, 0, 0, time.UTC)
+	claim := Claim{
+		Operation: Operation{ID: "operation-1", State: StateApplying},
+		Fence:     WriterFence{HolderID: "worker-1", Token: "token-1", Epoch: 1, AcquiredAt: now.Add(-time.Minute), ExpiresAt: now},
+	}
+	if _, err := NewCompletion(claim, Outcome{Kind: OutcomeApplied}, now); err == nil {
+		t.Fatal("expired claim produced a completion")
+	}
+	claim.Fence.ExpiresAt = now.Add(time.Minute)
+	if _, err := NewCompletion(claim, Outcome{Kind: OutcomeRetryable}, now); err == nil {
+		t.Fatal("retryable outcome without a future retry was accepted")
+	}
+}

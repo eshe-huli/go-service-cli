@@ -1,0 +1,93 @@
+package identityprovider
+
+import (
+	"context"
+	"testing"
+	"time"
+)
+
+type contractAdapter struct{}
+
+func (contractAdapter) ProviderKey() string { return "test" }
+func (contractAdapter) UpsertOrganization(context.Context, OrganizationDesiredState, WriteFence) (WriteResult, error) {
+	return WriteResult{}, nil
+}
+func (contractAdapter) UpsertSubject(context.Context, SubjectDesiredState, WriteFence) (WriteResult, error) {
+	return WriteResult{}, nil
+}
+func (contractAdapter) SetExternalSubjectAuthorization(context.Context, ExternalSubjectAuthorization, WriteFence) (WriteResult, error) {
+	return WriteResult{}, nil
+}
+func (contractAdapter) ReplaceRoleSnapshot(context.Context, RoleSnapshot, WriteFence) (WriteResult, error) {
+	return WriteResult{}, nil
+}
+func (contractAdapter) SetServiceBoundaryGrant(context.Context, ServiceBoundaryGrant, WriteFence) (WriteResult, error) {
+	return WriteResult{}, nil
+}
+func (contractAdapter) Readback(context.Context, string, string) (Readback, error) {
+	return Readback{ObservedAt: time.Now()}, nil
+}
+
+var _ Adapter = contractAdapter{}
+
+func TestAdapterContract(t *testing.T) {
+	var adapter Adapter = contractAdapter{}
+	if got := adapter.ProviderKey(); got != "test" {
+		t.Fatalf("ProviderKey() = %q, want test", got)
+	}
+}
+
+func TestWriteFenceValidation(t *testing.T) {
+	now := time.Date(2026, time.September, 14, 12, 0, 0, 0, time.UTC)
+	valid := WriteFence{
+		ProviderInstanceID: "provider-1", Environment: "staging", OperationID: "operation-1",
+		IdempotencyKey: "key-1", WriterHolder: "worker-1", WriterEpoch: 1, LeaseToken: "lease-1",
+		LeaseAcquiredAt: now.Add(-time.Second), LeaseExpiresAt: now.Add(time.Minute),
+	}
+	if err := valid.Validate(now); err != nil {
+		t.Fatalf("valid fence rejected: %v", err)
+	}
+	invalid := valid
+	invalid.WriterEpoch = 0
+	if err := invalid.Validate(now); err == nil {
+		t.Fatal("missing writer epoch accepted")
+	}
+	if err := valid.Validate(valid.LeaseExpiresAt); err == nil {
+		t.Fatal("expired write fence accepted at its boundary")
+	}
+}
+
+func TestOrganizationSubjectModeExcludesExternalHome(t *testing.T) {
+	reservation := SubjectReservation{
+		ReservationID: "reservation-1", FenceToken: "fence-1", IdentityID: "identity-1",
+		MembershipID: "membership-1", BusinessReference: "business-1",
+		Mode: OrganizationSubjectModeLocal, BindingGeneration: 1, ExpiresAt: time.Now().Add(time.Minute),
+	}
+	now := time.Now()
+	if err := reservation.Validate(now); err != nil {
+		t.Fatalf("organization-local reservation rejected: %v", err)
+	}
+	reservation.Mode = OrganizationSubjectMode("EXTERNAL_HOME_ORG")
+	if err := reservation.Validate(now); err == nil {
+		t.Fatal("external-home mode entered organization-local subject reservation")
+	}
+	reservation.Mode = OrganizationSubjectModeLocal
+	if err := reservation.Validate(reservation.ExpiresAt); err == nil {
+		t.Fatal("expired reservation accepted at its boundary")
+	}
+}
+
+func TestExternalAuthorizationRequiresExistingHomeSubject(t *testing.T) {
+	authorization := ExternalSubjectAuthorization{
+		BindingKey: "external-1", IdentityID: "identity-1", MembershipID: "membership-1",
+		HomeBusinessReference: "business-home", TargetBusinessReference: "business-target",
+		ProviderSubjectID: "provider-subject-1", SourceVersion: 1,
+	}
+	if err := authorization.Validate(); err != nil {
+		t.Fatalf("external authorization rejected: %v", err)
+	}
+	authorization.ProviderSubjectID = ""
+	if err := authorization.Validate(); err == nil {
+		t.Fatal("external authorization created without an existing provider subject")
+	}
+}

@@ -29,6 +29,31 @@ func TestModelValidation(t *testing.T) {
 		}
 	}
 }
+
+func TestCapabilityValidation(t *testing.T) {
+	m := New("demo", "example.com/demo")
+	m.Capabilities = []Capability{{ID: capabilityTransactionalInbox, Version: 1}}
+	if err := Validate(m); err != nil {
+		t.Fatal(err)
+	}
+
+	for _, capabilities := range [][]Capability{
+		{{ID: "unknown.capability", Version: 1}},
+		{{ID: capabilityTransactionalInbox, Version: 0}},
+		{{ID: capabilityTransactionalInbox, Version: 2}},
+		{{ID: capabilityTransactionalInbox, Version: 1}, {ID: capabilityTransactionalInbox, Version: 1}},
+		{{ID: "projection.reconciliation-worker", Version: 1}},
+	} {
+		m.Capabilities = capabilities
+		if Validate(m) == nil {
+			t.Errorf("accepted capabilities %#v", capabilities)
+		}
+	}
+	m.Capabilities = nil
+	if Validate(m) == nil {
+		t.Fatal("accepted an implicit capability set")
+	}
+}
 func TestRoutesConflict(t *testing.T) {
 	m := New("demo", "example.com/demo")
 	m.Modules = []Module{{Name: "billing", Operations: []Operation{

@@ -59,34 +59,39 @@ func (r *Report) Finish() {
 	r.OK = r.Errors == 0
 }
 
-type location struct{ layer, module, adapter string }
+type location struct{ layer, module, adapter, source string }
+
+const layerCapabilityExtension = "capability-extension"
 
 func locate(p string, m project.Manifest) (location, bool) {
 	dir := path.Dir(p)
 	if dir == "cmd/api" {
-		return location{layer: "entry"}, true
+		return location{layer: "entry", source: p}, true
 	}
 	if dir == "internal/bootstrap" {
-		return location{layer: "bootstrap"}, true
+		return location{layer: "bootstrap", source: p}, true
+	}
+	if _, ok := project.CapabilityExtensionForPath(m, p); ok {
+		return location{layer: layerCapabilityExtension, source: p}, true
 	}
 	if strings.HasPrefix(dir, "internal/platform/") {
-		return location{layer: "platform"}, true
+		return location{layer: "platform", source: p}, true
 	}
 	for _, mod := range m.Modules {
 		root := "internal/" + mod.Name
 		if dir == root {
-			return location{layer: "facade", module: mod.Name}, true
+			return location{layer: "facade", module: mod.Name, source: p}, true
 		}
 		for _, layer := range []string{"app", "domain"} {
 			prefix := root + "/internal/" + layer
 			if dir == prefix || strings.HasPrefix(dir, prefix+"/") {
-				return location{layer: layer, module: mod.Name}, true
+				return location{layer: layer, module: mod.Name, source: p}, true
 			}
 		}
 		for _, adapter := range []string{"httpapi", "postgres"} {
 			prefix := root + "/internal/adapter/" + adapter
 			if dir == prefix || strings.HasPrefix(dir, prefix+"/") {
-				return location{layer: "adapter", module: mod.Name, adapter: adapter}, true
+				return location{layer: "adapter", module: mod.Name, adapter: adapter, source: p}, true
 			}
 		}
 	}
@@ -120,10 +125,13 @@ func importAllowed(imp string, loc location, m project.Manifest, test bool) (boo
 		if pgx && ((loc.layer == "adapter" && loc.adapter == "postgres") || loc.layer == "bootstrap" || loc.layer == "facade") {
 			return true, ""
 		}
+		if loc.layer == layerCapabilityExtension && project.CapabilityExternalImportAllowed(m, loc.source, imp) {
+			return true, ""
+		}
 		return false, "unapproved external import: " + imp
 	}
 	rel := strings.TrimPrefix(imp, own)
-	if loc.layer == "platform" {
+	if loc.layer == "platform" || loc.layer == layerCapabilityExtension {
 		return strings.HasPrefix(rel, "internal/platform/"), "platform helpers cannot depend on business code"
 	}
 	if loc.layer == "entry" {
@@ -145,6 +153,9 @@ func importAllowed(imp string, loc location, m project.Manifest, test bool) (boo
 	}
 	if rel == "internal/platform/httpx" {
 		return loc.layer == "adapter" && loc.adapter == "httpapi", "HTTP helpers belong only in the HTTP adapter"
+	}
+	if loc.layer == "app" && project.CapabilityConsumerImportAllowed(m, rel) {
+		return true, ""
 	}
 	root := "internal/" + loc.module + "/internal/"
 	if !strings.HasPrefix(rel, root) {
@@ -202,6 +213,16 @@ func Run(l project.Loaded, strict bool) (Report, error) {
 		if _, ok := desired[p]; !ok {
 			r.Add("OWN005", "error", p, 0, "ownership entry is not in the model", "")
 		}
+	}
+	for _, definition := range project.DeclaredCapabilityDefinitions(l.Manifest) {
+		r.Add(
+			"CAPABILITY004",
+			"warning",
+			project.ManifestPath,
+			0,
+			fmt.Sprintf("%s@%d is structurally declared; runtime proof remains outside the gsvc source gate", definition.ID, definition.Version),
+			strings.Join(definition.ImplementationRequired, "; "),
+		)
 	}
 	paths, err := project.SourceFiles(l.Root)
 	if err != nil {

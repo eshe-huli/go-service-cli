@@ -1,0 +1,124 @@
+package inbox
+
+import (
+	"context"
+	"errors"
+	"strings"
+	"time"
+)
+
+type Event struct {
+	ID            string
+	Type          string
+	Schema        string
+	SchemaVersion int
+	AggregateType string
+	AggregateID   string
+	SourceVersion int64
+	OccurredAt    time.Time
+	CorrelationID string
+	CausationID   string
+	Payload       []byte
+}
+
+func (e Event) Validate() error {
+	if strings.TrimSpace(e.ID) == "" || strings.TrimSpace(e.Type) == "" || strings.TrimSpace(e.Schema) == "" {
+		return errors.New("event id, type, and schema are required")
+	}
+	if strings.TrimSpace(e.AggregateType) == "" || strings.TrimSpace(e.AggregateID) == "" {
+		return errors.New("aggregate type and id are required")
+	}
+	if e.SchemaVersion < 1 || e.SourceVersion < 0 || e.OccurredAt.IsZero() {
+		return errors.New("valid schema version, source version, and occurrence time are required")
+	}
+	if strings.TrimSpace(e.CorrelationID) == "" || strings.TrimSpace(e.CausationID) == "" {
+		return errors.New("correlation and causation ids are required")
+	}
+	if len(e.Payload) == 0 {
+		return errors.New("event payload is required")
+	}
+	return nil
+}
+
+// Provenance is constructed only after transport authentication. It keeps raw
+// transport input separate from an event admitted to the transactional inbox.
+type Provenance struct {
+	ProducerID       string
+	Transport        string
+	AuthenticatedBy  string
+	Environment      string
+	VerifiedAt       time.Time
+}
+
+func (p Provenance) Validate() error {
+	if strings.TrimSpace(p.ProducerID) == "" || strings.TrimSpace(p.Transport) == "" {
+		return errors.New("producer and transport are required")
+	}
+	if strings.TrimSpace(p.AuthenticatedBy) == "" || strings.TrimSpace(p.Environment) == "" || p.VerifiedAt.IsZero() {
+		return errors.New("authentication provenance, environment, and verification time are required")
+	}
+	return nil
+}
+
+// AdmissionPolicy authenticates the producer authorization and allowlists the
+// exact event type/schema/version before any durable claim.
+type AdmissionPolicy interface {
+	Authorize(context.Context, Event, Provenance) error
+}
+
+type AdmittedEvent struct {
+	event      Event
+	provenance Provenance
+}
+
+func Admit(ctx context.Context, event Event, provenance Provenance, policy AdmissionPolicy) (AdmittedEvent, error) {
+	if ctx == nil {
+		return AdmittedEvent{}, errors.New("admission context is required")
+	}
+	candidate := cloneEvent(event)
+	if err := candidate.Validate(); err != nil {
+		return AdmittedEvent{}, err
+	}
+	if err := provenance.Validate(); err != nil {
+		return AdmittedEvent{}, err
+	}
+	if policy == nil {
+		return AdmittedEvent{}, errors.New("admission policy is required")
+	}
+	// The policy gets its own payload copy so neither the caller nor the policy
+	// can mutate bytes after admission and change what the store claims.
+	if err := policy.Authorize(ctx, cloneEvent(candidate), provenance); err != nil {
+		return AdmittedEvent{}, err
+	}
+	return AdmittedEvent{event: candidate, provenance: provenance}, nil
+}
+
+func (e AdmittedEvent) Event() Event           { return cloneEvent(e.event) }
+func (e AdmittedEvent) Provenance() Provenance { return e.provenance }
+
+func cloneEvent(event Event) Event {
+	event.Payload = append([]byte(nil), event.Payload...)
+	return event
+}
+
+type Receipt struct {
+	EventID       string
+	State         string
+	AttemptCount  int
+	FirstSeenAt   time.Time
+	LastAttemptAt time.Time
+	LastErrorCode string
+}
+
+// Transaction is the narrow persistence boundary used by one event handler.
+// A durable implementation must store the receipt and desired-state mutation
+// in the same database transaction.
+type Transaction interface {
+	Claim(context.Context, AdmittedEvent) (Receipt, bool, error)
+	MarkApplied(context.Context, string, time.Time) error
+	MarkFailed(context.Context, string, string, time.Time) error
+}
+
+type Store interface {
+	WithinTransaction(context.Context, func(Transaction) error) error
+}

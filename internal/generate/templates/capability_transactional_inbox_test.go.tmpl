@@ -1,0 +1,77 @@
+package inbox
+
+import (
+	"context"
+	"errors"
+	"testing"
+	"time"
+)
+
+type admissionPolicy struct{ err error }
+
+func (p admissionPolicy) Authorize(context.Context, Event, Provenance) error { return p.err }
+
+func TestAdmission(t *testing.T) {
+	event := Event{
+		ID: "event-1", Type: "identity.changed.v1", Schema: "identity.changed",
+		SchemaVersion: 1, AggregateType: "identity", AggregateID: "identity-1",
+		SourceVersion: 1, OccurredAt: time.Now(), CorrelationID: "correlation-1",
+		CausationID: "cause-1", Payload: []byte("{}"),
+	}
+	provenance := Provenance{
+		ProducerID: "identity-service", Transport: "kafka", AuthenticatedBy: "mtls",
+		Environment: "staging", VerifiedAt: time.Now(),
+	}
+	admitted, err := Admit(context.Background(), event, provenance, admissionPolicy{})
+	if err != nil {
+		t.Fatalf("Admit() error = %v", err)
+	}
+	if admitted.Event().ID != event.ID || admitted.Provenance().ProducerID != provenance.ProducerID {
+		t.Fatal("admission did not preserve verified input")
+	}
+	event.Payload[0] = '['
+	firstRead := admitted.Event()
+	if string(firstRead.Payload) != "{}" {
+		t.Fatal("caller mutation changed admitted payload")
+	}
+	firstRead.Payload[0] = '['
+	if string(admitted.Event().Payload) != "{}" {
+		t.Fatal("getter exposed mutable admitted payload")
+	}
+	denied := errors.New("schema denied")
+	if _, err = Admit(context.Background(), event, provenance, admissionPolicy{err: denied}); !errors.Is(err, denied) {
+		t.Fatalf("Admit() error = %v, want %v", err, denied)
+	}
+}
+
+func TestAdmissionRejectsIncompleteInput(t *testing.T) {
+	event := Event{
+		ID: "event-1", Type: "identity.changed.v1", Schema: "identity.changed",
+		SchemaVersion: 1, AggregateType: "identity", AggregateID: "identity-1",
+		SourceVersion: 1, OccurredAt: time.Now(), CorrelationID: "correlation-1",
+		CausationID: "cause-1", Payload: []byte("{}"),
+	}
+	provenance := Provenance{
+		ProducerID: "identity-service", Transport: "kafka", AuthenticatedBy: "mtls",
+		Environment: "staging", VerifiedAt: time.Now(),
+	}
+	for _, test := range []struct {
+		name       string
+		context    context.Context
+		event      Event
+		provenance Provenance
+		policy     AdmissionPolicy
+	}{
+		{name: "nil context", event: event, provenance: provenance, policy: admissionPolicy{}},
+		{name: "missing schema", context: context.Background(), event: func() Event { value := event; value.Schema = ""; return value }(), provenance: provenance, policy: admissionPolicy{}},
+		{name: "missing payload", context: context.Background(), event: func() Event { value := event; value.Payload = nil; return value }(), provenance: provenance, policy: admissionPolicy{}},
+		{name: "missing provenance", context: context.Background(), event: event, provenance: Provenance{}, policy: admissionPolicy{}},
+		{name: "missing policy", context: context.Background(), event: event, provenance: provenance},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			if _, err := Admit(test.context, test.event, test.provenance, test.policy); err == nil {
+				t.Fatal("incomplete admission input accepted")
+			}
+		})
+	}
+}

@@ -15,9 +15,9 @@ import (
 	"strings"
 )
 
-const Version = "0.1.0"
-const SchemaVersion = 1
-const Policy = "go-service/v1"
+const Version = "0.2.0"
+const SchemaVersion = 2
+const Policy = "go-service/v2"
 const ManifestPath = "gsvc.json"
 const StatePath = ".gsvc/ownership.json"
 
@@ -32,12 +32,17 @@ func (e *Error) Error() string              { return e.Code + ": " + e.Message }
 func Fail(code, message, hint string) error { return &Error{code, message, hint} }
 
 type Manifest struct {
-	SchemaVersion int      `json:"schema_version"`
-	ToolVersion   string   `json:"tool_version"`
-	Policy        string   `json:"policy"`
-	Service       string   `json:"service"`
-	GoModule      string   `json:"go_module"`
-	Modules       []Module `json:"modules"`
+	SchemaVersion int          `json:"schema_version"`
+	ToolVersion   string       `json:"tool_version"`
+	Policy        string       `json:"policy"`
+	Service       string       `json:"service"`
+	GoModule      string       `json:"go_module"`
+	Capabilities  []Capability `json:"capabilities"`
+	Modules       []Module     `json:"modules"`
+}
+type Capability struct {
+	ID      string `json:"id"`
+	Version int    `json:"version"`
 }
 type Module struct {
 	Name       string      `json:"name"`
@@ -76,7 +81,7 @@ var modulePath = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9._~/-]*$`)
 var literalSegment = regexp.MustCompile(`^[A-Za-z0-9_-]+$`)
 
 func New(name, module string) Manifest {
-	return Manifest{SchemaVersion: SchemaVersion, ToolVersion: Version, Policy: Policy, Service: name, GoModule: module, Modules: []Module{}}
+	return Manifest{SchemaVersion: SchemaVersion, ToolVersion: Version, Policy: Policy, Service: name, GoModule: module, Capabilities: []Capability{}, Modules: []Module{}}
 }
 func DecodeStrict(data []byte, out any) error {
 	d := json.NewDecoder(bytes.NewReader(data))
@@ -98,6 +103,10 @@ func JSON(v any) []byte {
 	return append(b, '\n')
 }
 func Normalize(m *Manifest) {
+	if m.Capabilities == nil {
+		m.Capabilities = []Capability{}
+	}
+	sort.Slice(m.Capabilities, func(i, j int) bool { return m.Capabilities[i].ID < m.Capabilities[j].ID })
 	if m.Modules == nil {
 		m.Modules = []Module{}
 	}
@@ -158,6 +167,22 @@ func Validate(m Manifest) (err error) {
 		return err
 	}
 	if err = ValidateGoModule(m.GoModule); err != nil {
+		return err
+	}
+	if m.Capabilities == nil {
+		return Fail("CAPABILITY001", "capabilities must be an explicit array", "Upgrade the project with gsvc upgrade before using this CLI version.")
+	}
+	capabilities := map[string]bool{}
+	for _, capability := range m.Capabilities {
+		if capabilities[capability.ID] {
+			return Fail("CAPABILITY003", "duplicate capability: "+capability.ID, "")
+		}
+		if err = ValidateCapability(capability); err != nil {
+			return err
+		}
+		capabilities[capability.ID] = true
+	}
+	if err = ValidateCapabilityDependencies(m.Capabilities); err != nil {
 		return err
 	}
 	seen := map[string]bool{}

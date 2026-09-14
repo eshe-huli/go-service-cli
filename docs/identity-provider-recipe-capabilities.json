@@ -1,0 +1,349 @@
+{
+  "schema_version": 1,
+  "tool": "gsvc",
+  "version": "0.2.0",
+  "ok": true,
+  "command": "capabilities",
+  "data": {
+    "assessments": [
+      {
+        "id": "eventing.transactional-inbox",
+        "version": 1,
+        "description": "Durable, idempotent event admission contracts shared by broker and authenticated HTTP adapters.",
+        "maturity": "contract-scaffold",
+        "status": "declared",
+        "requires": [],
+        "consumer_import": "internal/platform/inbox",
+        "outputs": [
+          {
+            "path": "internal/platform/inbox/contracts_gen.go",
+            "template": "capability_transactional_inbox.go"
+          },
+          {
+            "path": "internal/platform/inbox/contracts_gen_test.go",
+            "template": "capability_transactional_inbox_test.go"
+          }
+        ],
+        "extensions": [
+          {
+            "root": "internal/platform/inbox/adapter/kafka",
+            "description": "Kafka transport adapter; admission remains authenticated and schema allowlisted.",
+            "external_imports": [
+              "github.com/twmb/franz-go/pkg/kgo"
+            ]
+          },
+          {
+            "root": "internal/platform/inbox/adapter/http",
+            "description": "Authenticated internal HTTP admission adapter using the standard library.",
+            "external_imports": []
+          },
+          {
+            "root": "internal/platform/inbox/adapter/postgres",
+            "description": "PostgreSQL transactional inbox adapter.",
+            "external_imports": [
+              "github.com/jackc/pgx/v5"
+            ]
+          }
+        ],
+        "implementation_required": [
+          "implement an allowlisted, schema-versioned broker adapter and authenticated HTTP adapter",
+          "commit the inbox receipt and desired-state mutation atomically in a real database transaction",
+          "prove duplicate, out-of-order, poison-message, retry, dead-letter, and restart behavior"
+        ]
+      },
+      {
+        "id": "identity-provider.port",
+        "version": 1,
+        "description": "Provider-neutral organization, subject, role-snapshot, and service-boundary grant contracts.",
+        "maturity": "contract-scaffold",
+        "status": "declared",
+        "requires": [],
+        "consumer_import": "internal/platform/identityprovider",
+        "outputs": [
+          {
+            "path": "internal/platform/identityprovider/contracts_gen.go",
+            "template": "capability_identity_provider.go"
+          },
+          {
+            "path": "internal/platform/identityprovider/contracts_gen_test.go",
+            "template": "capability_identity_provider_test.go"
+          }
+        ],
+        "extensions": [
+          {
+            "root": "internal/platform/identityprovider/adapter",
+            "description": "Provider adapter implemented against the neutral port; external SDKs require a reviewed capability version.",
+            "external_imports": []
+          }
+        ],
+        "implementation_required": [
+          "implement a provider adapter outside generated code and authenticate it with a reviewed machine credential",
+          "use fenced canonical subject reservations; never correlate or merge subjects by email or phone",
+          "route external-home access through existing-subject authorization; never create a target-organization subject for EXTERNAL_HOME_ORG",
+          "prove organization, subject, role snapshot, service-boundary grant, revocation, collision, and read-after-write behavior"
+        ]
+      },
+      {
+        "id": "platform.http-command-ingress",
+        "version": 1,
+        "description": "Verified principal, provenance, idempotency, and request-context contracts for internal commands.",
+        "maturity": "contract-scaffold",
+        "status": "declared",
+        "requires": [],
+        "consumer_import": "internal/platform/commanding",
+        "outputs": [
+          {
+            "path": "internal/platform/commanding/context_gen.go",
+            "template": "capability_http_command_ingress.go"
+          },
+          {
+            "path": "internal/platform/commanding/context_gen_test.go",
+            "template": "capability_http_command_ingress_test.go"
+          }
+        ],
+        "extensions": [
+          {
+            "root": "internal/platform/commanding/adapter",
+            "description": "Authenticated HTTP context adapter; credential verification remains developer-owned.",
+            "external_imports": []
+          }
+        ],
+        "implementation_required": [
+          "authenticate the caller before constructing a verified command context",
+          "authorize service and action scope through the owning platform authorities",
+          "prove replay, missing provenance, wrong audience, cancellation, timeout, and denial behavior"
+        ]
+      },
+      {
+        "id": "platform.service-runtime",
+        "version": 1,
+        "description": "A generated service manifest that declares contract capabilities without asserting runtime readiness.",
+        "maturity": "contract-scaffold",
+        "status": "declared",
+        "requires": [],
+        "consumer_import": "internal/platform/serviceinfo",
+        "outputs": [
+          {
+            "path": "internal/platform/serviceinfo/manifest_gen.go",
+            "template": "capability_service_runtime.go"
+          },
+          {
+            "path": "internal/platform/serviceinfo/manifest_gen_test.go",
+            "template": "capability_service_runtime_test.go"
+          }
+        ],
+        "extensions": [
+          {
+            "root": "internal/platform/serviceinfo/adapter",
+            "description": "Service catalog and dependency-readiness adapter.",
+            "external_imports": []
+          }
+        ],
+        "implementation_required": [
+          "wire truthful liveness and dependency-aware readiness",
+          "register the immutable revision and declared capabilities through authenticated Service Access",
+          "keep source, CI, artifact, deployment, runtime, and authorized actor proof separate"
+        ]
+      },
+      {
+        "id": "projection.operation-journal",
+        "version": 1,
+        "description": "Durable desired-state operation, attempt, supersession, and terminal-outcome contracts.",
+        "maturity": "contract-scaffold",
+        "status": "declared",
+        "requires": [],
+        "consumer_import": "internal/platform/operationjournal",
+        "outputs": [
+          {
+            "path": "internal/platform/operationjournal/contracts_gen.go",
+            "template": "capability_operation_journal.go"
+          },
+          {
+            "path": "internal/platform/operationjournal/contracts_gen_test.go",
+            "template": "capability_operation_journal_test.go"
+          }
+        ],
+        "extensions": [
+          {
+            "root": "internal/platform/operationjournal/adapter/postgres",
+            "description": "PostgreSQL operation-journal adapter.",
+            "external_imports": [
+              "github.com/jackc/pgx/v5"
+            ]
+          }
+        ],
+        "implementation_required": [
+          "implement durable compare-and-set transitions and deterministic operation keys",
+          "persist provider receipts without storing credentials or raw sensitive tokens",
+          "prove duplicate, superseded, retryable, terminal, crash-between-write-and-commit, and manual-repair states"
+        ]
+      },
+      {
+        "id": "projection.reconciliation-worker",
+        "version": 1,
+        "description": "Leased, fenced, bounded reconciliation worker contracts for one active provider writer.",
+        "maturity": "contract-scaffold",
+        "status": "declared",
+        "requires": [
+          {
+            "id": "projection.operation-journal",
+            "version": 1
+          }
+        ],
+        "consumer_import": "internal/platform/reconciliation",
+        "outputs": [
+          {
+            "path": "internal/platform/reconciliation/contracts_gen.go",
+            "template": "capability_reconciliation_worker.go"
+          },
+          {
+            "path": "internal/platform/reconciliation/contracts_gen_test.go",
+            "template": "capability_reconciliation_worker_test.go"
+          }
+        ],
+        "extensions": [
+          {
+            "root": "internal/platform/reconciliation/adapter",
+            "description": "Worker scheduling, lease, and execution adapters.",
+            "external_imports": []
+          }
+        ],
+        "implementation_required": [
+          "implement leases or fencing that prevent concurrent provider mutation",
+          "bound retries and distinguish retryable, terminal, superseded, and operator-required outcomes",
+          "prove cancellation, lease expiry, failover, provider-success/local-commit-failure, and restart reuse"
+        ]
+      }
+    ],
+    "contract_check": {
+      "ok": true,
+      "files_checked": 22,
+      "errors": 0,
+      "warnings": 6,
+      "diagnostics": [
+        {
+          "code": "CAPABILITY004",
+          "severity": "warning",
+          "file": "gsvc.json",
+          "message": "eventing.transactional-inbox@1 is structurally declared; runtime proof remains outside the gsvc source gate",
+          "hint": "implement an allowlisted, schema-versioned broker adapter and authenticated HTTP adapter; commit the inbox receipt and desired-state mutation atomically in a real database transaction; prove duplicate, out-of-order, poison-message, retry, dead-letter, and restart behavior"
+        },
+        {
+          "code": "CAPABILITY004",
+          "severity": "warning",
+          "file": "gsvc.json",
+          "message": "identity-provider.port@1 is structurally declared; runtime proof remains outside the gsvc source gate",
+          "hint": "implement a provider adapter outside generated code and authenticate it with a reviewed machine credential; use fenced canonical subject reservations; never correlate or merge subjects by email or phone; route external-home access through existing-subject authorization; never create a target-organization subject for EXTERNAL_HOME_ORG; prove organization, subject, role snapshot, service-boundary grant, revocation, collision, and read-after-write behavior"
+        },
+        {
+          "code": "CAPABILITY004",
+          "severity": "warning",
+          "file": "gsvc.json",
+          "message": "platform.http-command-ingress@1 is structurally declared; runtime proof remains outside the gsvc source gate",
+          "hint": "authenticate the caller before constructing a verified command context; authorize service and action scope through the owning platform authorities; prove replay, missing provenance, wrong audience, cancellation, timeout, and denial behavior"
+        },
+        {
+          "code": "CAPABILITY004",
+          "severity": "warning",
+          "file": "gsvc.json",
+          "message": "platform.service-runtime@1 is structurally declared; runtime proof remains outside the gsvc source gate",
+          "hint": "wire truthful liveness and dependency-aware readiness; register the immutable revision and declared capabilities through authenticated Service Access; keep source, CI, artifact, deployment, runtime, and authorized actor proof separate"
+        },
+        {
+          "code": "CAPABILITY004",
+          "severity": "warning",
+          "file": "gsvc.json",
+          "message": "projection.operation-journal@1 is structurally declared; runtime proof remains outside the gsvc source gate",
+          "hint": "implement durable compare-and-set transitions and deterministic operation keys; persist provider receipts without storing credentials or raw sensitive tokens; prove duplicate, superseded, retryable, terminal, crash-between-write-and-commit, and manual-repair states"
+        },
+        {
+          "code": "CAPABILITY004",
+          "severity": "warning",
+          "file": "gsvc.json",
+          "message": "projection.reconciliation-worker@1 is structurally declared; runtime proof remains outside the gsvc source gate",
+          "hint": "implement leases or fencing that prevent concurrent provider mutation; bound retries and distinguish retryable, terminal, superseded, and operator-required outcomes; prove cancellation, lease expiry, failover, provider-success/local-commit-failure, and restart reuse"
+        }
+      ]
+    },
+    "declared": [
+      {
+        "id": "eventing.transactional-inbox",
+        "version": 1
+      },
+      {
+        "id": "identity-provider.port",
+        "version": 1
+      },
+      {
+        "id": "platform.http-command-ingress",
+        "version": 1
+      },
+      {
+        "id": "platform.service-runtime",
+        "version": 1
+      },
+      {
+        "id": "projection.operation-journal",
+        "version": 1
+      },
+      {
+        "id": "projection.reconciliation-worker",
+        "version": 1
+      }
+    ],
+    "declared_recipe_compositions": [
+      {
+        "name": "identity-provider-orchestrator",
+        "version": 1,
+        "description": "Provider-neutral identity projection control-plane contracts; concrete provider and Kafka adapters remain developer-owned.",
+        "capabilities": [
+          {
+            "id": "platform.service-runtime",
+            "version": 1
+          },
+          {
+            "id": "platform.http-command-ingress",
+            "version": 1
+          },
+          {
+            "id": "eventing.transactional-inbox",
+            "version": 1
+          },
+          {
+            "id": "projection.operation-journal",
+            "version": 1
+          },
+          {
+            "id": "identity-provider.port",
+            "version": 1
+          },
+          {
+            "id": "projection.reconciliation-worker",
+            "version": 1
+          }
+        ]
+      },
+      {
+        "name": "projection-worker",
+        "version": 1,
+        "description": "Durable event intake, operation journal, and single-writer reconciliation contracts.",
+        "capabilities": [
+          {
+            "id": "eventing.transactional-inbox",
+            "version": 1
+          },
+          {
+            "id": "projection.operation-journal",
+            "version": 1
+          },
+          {
+            "id": "projection.reconciliation-worker",
+            "version": 1
+          }
+        ]
+      }
+    ],
+    "maturity": "contract-scaffold",
+    "root": "/private/tmp/codex-gsvc-proof.mw8PEY/iam-orchestrator"
+  }
+}

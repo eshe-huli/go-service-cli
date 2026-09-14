@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "tool": "gsvc",
+  "version": "0.2.0",
+  "ok": true,
+  "command": "check",
+  "data": {
+    "check": {
+      "ok": true,
+      "files_checked": 22,
+      "errors": 0,
+      "warnings": 6,
+      "diagnostics": [
+        {
+          "code": "CAPABILITY004",
+          "severity": "warning",
+          "file": "gsvc.json",
+          "message": "eventing.transactional-inbox@1 is structurally declared; runtime proof remains outside the gsvc source gate",
+          "hint": "implement an allowlisted, schema-versioned broker adapter and authenticated HTTP adapter; commit the inbox receipt and desired-state mutation atomically in a real database transaction; prove duplicate, out-of-order, poison-message, retry, dead-letter, and restart behavior"
+        },
+        {
+          "code": "CAPABILITY004",
+          "severity": "warning",
+          "file": "gsvc.json",
+          "message": "identity-provider.port@1 is structurally declared; runtime proof remains outside the gsvc source gate",
+          "hint": "implement a provider adapter outside generated code and authenticate it with a reviewed machine credential; use fenced canonical subject reservations; never correlate or merge subjects by email or phone; route external-home access through existing-subject authorization; never create a target-organization subject for EXTERNAL_HOME_ORG; prove organization, subject, role snapshot, service-boundary grant, revocation, collision, and read-after-write behavior"
+        },
+        {
+          "code": "CAPABILITY004",
+          "severity": "warning",
+          "file": "gsvc.json",
+          "message": "platform.http-command-ingress@1 is structurally declared; runtime proof remains outside the gsvc source gate",
+          "hint": "authenticate the caller before constructing a verified command context; authorize service and action scope through the owning platform authorities; prove replay, missing provenance, wrong audience, cancellation, timeout, and denial behavior"
+        },
+        {
+          "code": "CAPABILITY004",
+          "severity": "warning",
+          "file": "gsvc.json",
+          "message": "platform.service-runtime@1 is structurally declared; runtime proof remains outside the gsvc source gate",
+          "hint": "wire truthful liveness and dependency-aware readiness; register the immutable revision and declared capabilities through authenticated Service Access; keep source, CI, artifact, deployment, runtime, and authorized actor proof separate"
+        },
+        {
+          "code": "CAPABILITY004",
+          "severity": "warning",
+          "file": "gsvc.json",
+          "message": "projection.operation-journal@1 is structurally declared; runtime proof remains outside the gsvc source gate",
+          "hint": "implement durable compare-and-set transitions and deterministic operation keys; persist provider receipts without storing credentials or raw sensitive tokens; prove duplicate, superseded, retryable, terminal, crash-between-write-and-commit, and manual-repair states"
+        },
+        {
+          "code": "CAPABILITY004",
+          "severity": "warning",
+          "file": "gsvc.json",
+          "message": "projection.reconciliation-worker@1 is structurally declared; runtime proof remains outside the gsvc source gate",
+          "hint": "implement leases or fencing that prevent concurrent provider mutation; bound retries and distinguish retryable, terminal, superseded, and operator-required outcomes; prove cancellation, lease expiry, failover, provider-success/local-commit-failure, and restart reuse"
+        }
+      ]
+    },
+    "verification": [
+      {
+        "command": [
+          "go",
+          "test",
+          "-race",
+          "./..."
+        ],
+        "exit_code": 0,
+        "output": "?   \texample.com/iam-orchestrator/cmd/api\t[no test files]\nok  \texample.com/iam-orchestrator/internal/bootstrap\t(cached)\nok  \texample.com/iam-orchestrator/internal/platform/commanding\t(cached)\nok  \texample.com/iam-orchestrator/internal/platform/fault\t(cached)\nok  \texample.com/iam-orchestrator/internal/platform/httpx\t(cached)\nok  \texample.com/iam-orchestrator/internal/platform/identityprovider\t(cached)\nok  \texample.com/iam-orchestrator/internal/platform/inbox\t(cached)\nok  \texample.com/iam-orchestrator/internal/platform/operationjournal\t1.394s\nok  \texample.com/iam-orchestrator/internal/platform/reconciliation\t1.398s\nok  \texample.com/iam-orchestrator/internal/platform/serviceinfo\t(cached)\nok  \texample.com/iam-orchestrator/internal/platform/validate\t(cached)\n",
+        "truncated": false
+      },
+      {
+        "command": [
+          "go",
+          "vet",
+          "./..."
+        ],
+        "exit_code": 0,
+        "output": "",
+        "truncated": false
+      }
+    ]
+  }
+}

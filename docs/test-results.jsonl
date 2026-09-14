@@ -1,195 +1,251 @@
-{"Time":"2026-09-08T15:46:00.251498298Z","Action":"start","Package":"gsvc.local/cli/cmd/gsvc"}
-{"Time":"2026-09-08T15:46:00.251584523Z","Action":"output","Package":"gsvc.local/cli/cmd/gsvc","Output":"?   \tgsvc.local/cli/cmd/gsvc\t[no test files]\n"}
-{"Time":"2026-09-08T15:46:00.251592769Z","Action":"skip","Package":"gsvc.local/cli/cmd/gsvc","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.251661714Z","Action":"start","Package":"gsvc.local/cli/internal/assets"}
-{"Time":"2026-09-08T15:46:00.251669114Z","Action":"output","Package":"gsvc.local/cli/internal/assets","Output":"?   \tgsvc.local/cli/internal/assets\t[no test files]\n"}
-{"Time":"2026-09-08T15:46:00.251674166Z","Action":"skip","Package":"gsvc.local/cli/internal/assets","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.449678427Z","Action":"start","Package":"gsvc.local/cli/internal/assets/runtime/fault"}
-{"Time":"2026-09-08T15:46:00.47105225Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/fault","Test":"TestWrappedKind"}
-{"Time":"2026-09-08T15:46:00.471113693Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/fault","Test":"TestWrappedKind","Output":"=== RUN   TestWrappedKind\n"}
-{"Time":"2026-09-08T15:46:00.471425416Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/fault","Test":"TestWrappedKind","Output":"--- PASS: TestWrappedKind (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.471505363Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/fault","Test":"TestWrappedKind","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.471520705Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/fault","Output":"PASS\n"}
-{"Time":"2026-09-08T15:46:00.544939216Z","Action":"start","Package":"gsvc.local/cli/internal/assets/runtime/httpx"}
-{"Time":"2026-09-08T15:46:00.54511762Z","Action":"start","Package":"gsvc.local/cli/internal/assets/runtime/validate"}
-{"Time":"2026-09-08T15:46:00.54532194Z","Action":"start","Package":"gsvc.local/cli/internal/check"}
-{"Time":"2026-09-08T15:46:00.545340881Z","Action":"output","Package":"gsvc.local/cli/internal/check","Output":"?   \tgsvc.local/cli/internal/check\t[no test files]\n"}
-{"Time":"2026-09-08T15:46:00.545349403Z","Action":"skip","Package":"gsvc.local/cli/internal/check","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.559966835Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON"}
-{"Time":"2026-09-08T15:46:00.559998116Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON","Output":"=== RUN   TestDecodeJSON\n"}
-{"Time":"2026-09-08T15:46:00.560210765Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/validate","Test":"TestDecimal"}
-{"Time":"2026-09-08T15:46:00.560217289Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/validate","Test":"TestDecimal","Output":"=== RUN   TestDecimal\n"}
-{"Time":"2026-09-08T15:46:00.560405359Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/validate","Test":"TestDecimal","Output":"--- PASS: TestDecimal (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.560414853Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/validate","Test":"TestDecimal","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.560423157Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/validate","Output":"PASS\n"}
-{"Time":"2026-09-08T15:46:00.565089376Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/valid_zero"}
-{"Time":"2026-09-08T15:46:00.565112053Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/valid_zero","Output":"=== RUN   TestDecodeJSON/valid_zero\n"}
-{"Time":"2026-09-08T15:46:00.565418163Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/valid_zero","Output":"--- PASS: TestDecodeJSON/valid_zero (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.565433136Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/valid_zero","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.565446476Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/missing"}
-{"Time":"2026-09-08T15:46:00.565496126Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/missing","Output":"=== RUN   TestDecodeJSON/missing\n"}
-{"Time":"2026-09-08T15:46:00.565603501Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/missing","Output":"--- PASS: TestDecodeJSON/missing (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.565609074Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/missing","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.565645455Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/unknown"}
-{"Time":"2026-09-08T15:46:00.565648578Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/unknown","Output":"=== RUN   TestDecodeJSON/unknown\n"}
-{"Time":"2026-09-08T15:46:00.565795275Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/unknown","Output":"--- PASS: TestDecodeJSON/unknown (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.565800389Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/unknown","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.565804955Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/case_alias"}
-{"Time":"2026-09-08T15:46:00.565807759Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/case_alias","Output":"=== RUN   TestDecodeJSON/case_alias\n"}
-{"Time":"2026-09-08T15:46:00.565888019Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/case_alias","Output":"--- PASS: TestDecodeJSON/case_alias (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.565892638Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/case_alias","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.565897419Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/duplicate"}
-{"Time":"2026-09-08T15:46:00.565900197Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/duplicate","Output":"=== RUN   TestDecodeJSON/duplicate\n"}
-{"Time":"2026-09-08T15:46:00.565983046Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/duplicate","Output":"--- PASS: TestDecodeJSON/duplicate (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.565987807Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/duplicate","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.565999098Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/null"}
-{"Time":"2026-09-08T15:46:00.566002438Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/null","Output":"=== RUN   TestDecodeJSON/null\n"}
-{"Time":"2026-09-08T15:46:00.566115463Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/null","Output":"--- PASS: TestDecodeJSON/null (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.566122947Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/null","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.566127878Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/two_documents"}
-{"Time":"2026-09-08T15:46:00.566131043Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/two_documents","Output":"=== RUN   TestDecodeJSON/two_documents\n"}
-{"Time":"2026-09-08T15:46:00.566234885Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/two_documents","Output":"--- PASS: TestDecodeJSON/two_documents (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.566245905Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/two_documents","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.566250527Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/array"}
-{"Time":"2026-09-08T15:46:00.566253913Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/array","Output":"=== RUN   TestDecodeJSON/array\n"}
-{"Time":"2026-09-08T15:46:00.566312042Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/array","Output":"--- PASS: TestDecodeJSON/array (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.566316613Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/array","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.56632076Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/large"}
-{"Time":"2026-09-08T15:46:00.566323915Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/large","Output":"=== RUN   TestDecodeJSON/large\n"}
-{"Time":"2026-09-08T15:46:00.59050696Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/large","Output":"--- PASS: TestDecodeJSON/large (0.02s)\n"}
-{"Time":"2026-09-08T15:46:00.590534605Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/large","Elapsed":0.02}
-{"Time":"2026-09-08T15:46:00.590551022Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON","Output":"--- PASS: TestDecodeJSON (0.03s)\n"}
-{"Time":"2026-09-08T15:46:00.59055524Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON","Elapsed":0.03}
-{"Time":"2026-09-08T15:46:00.590558215Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestContentTypeRequired"}
-{"Time":"2026-09-08T15:46:00.590560537Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestContentTypeRequired","Output":"=== RUN   TestContentTypeRequired\n"}
-{"Time":"2026-09-08T15:46:00.590563638Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestContentTypeRequired","Output":"--- PASS: TestContentTypeRequired (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.590565977Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestContentTypeRequired","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.590568223Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestErrorDoesNotLeak"}
-{"Time":"2026-09-08T15:46:00.590570163Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestErrorDoesNotLeak","Output":"=== RUN   TestErrorDoesNotLeak\n"}
-{"Time":"2026-09-08T15:46:00.590576986Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestErrorDoesNotLeak","Output":"2026/09/08 15:46:00 ERROR request failed error=\"database password=secret\"\n"}
-{"Time":"2026-09-08T15:46:00.590712197Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestErrorDoesNotLeak","Output":"--- PASS: TestErrorDoesNotLeak (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.590742719Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestErrorDoesNotLeak","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.590747547Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestQuery"}
-{"Time":"2026-09-08T15:46:00.590750482Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestQuery","Output":"=== RUN   TestQuery\n"}
-{"Time":"2026-09-08T15:46:00.590893561Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestQuery","Output":"--- PASS: TestQuery (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.590901127Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestQuery","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.590914012Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestPanicRecovery"}
-{"Time":"2026-09-08T15:46:00.590917123Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestPanicRecovery","Output":"=== RUN   TestPanicRecovery\n"}
-{"Time":"2026-09-08T15:46:00.591008284Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestPanicRecovery","Output":"2026/09/08 15:46:00 ERROR request panic panic=secret\n"}
-{"Time":"2026-09-08T15:46:00.591037339Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestPanicRecovery","Output":"2026/09/08 15:46:00 ERROR request failed error=\"unexpected panic\"\n"}
-{"Time":"2026-09-08T15:46:00.591162995Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestPanicRecovery","Output":"--- PASS: TestPanicRecovery (0.00s)\n"}
-{"Time":"2026-09-08T15:46:00.591171335Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestPanicRecovery","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.591206858Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Output":"PASS\n"}
-{"Time":"2026-09-08T15:46:00.643050215Z","Action":"start","Package":"gsvc.local/cli/internal/cli"}
-{"Time":"2026-09-08T15:46:00.643187848Z","Action":"start","Package":"gsvc.local/cli/internal/generate"}
-{"Time":"2026-09-08T15:46:00.643197105Z","Action":"output","Package":"gsvc.local/cli/internal/generate","Output":"?   \tgsvc.local/cli/internal/generate\t[no test files]\n"}
-{"Time":"2026-09-08T15:46:00.643201899Z","Action":"skip","Package":"gsvc.local/cli/internal/generate","Elapsed":0}
-{"Time":"2026-09-08T15:46:00.657512381Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestMachineProtocol"}
-{"Time":"2026-09-08T15:46:00.657535503Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestMachineProtocol","Output":"=== RUN   TestMachineProtocol\n"}
-{"Time":"2026-09-08T15:46:00.791504249Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestMachineProtocol","Output":"--- PASS: TestMachineProtocol (0.14s)\n"}
-{"Time":"2026-09-08T15:46:00.791546333Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestMachineProtocol","Elapsed":0.14}
-{"Time":"2026-09-08T15:46:00.791555838Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestGeneratorCheckerAndGeneratedBuildAgree"}
-{"Time":"2026-09-08T15:46:00.791558733Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestGeneratorCheckerAndGeneratedBuildAgree","Output":"=== RUN   TestGeneratorCheckerAndGeneratedBuildAgree\n"}
-{"Time":"2026-09-08T15:46:00.945810908Z","Action":"start","Package":"gsvc.local/cli/internal/project"}
-{"Time":"2026-09-08T15:46:01.014292228Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestWriterPreservationAndPreflight"}
-{"Time":"2026-09-08T15:46:01.014329511Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestWriterPreservationAndPreflight","Output":"=== RUN   TestWriterPreservationAndPreflight\n"}
-{"Time":"2026-09-08T15:46:01.024711661Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestWriterPreservationAndPreflight","Output":"--- PASS: TestWriterPreservationAndPreflight (0.01s)\n"}
-{"Time":"2026-09-08T15:46:01.024743865Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestWriterPreservationAndPreflight","Elapsed":0.01}
-{"Time":"2026-09-08T15:46:01.024846369Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestSymlinkRejected"}
-{"Time":"2026-09-08T15:46:01.024851374Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestSymlinkRejected","Output":"=== RUN   TestSymlinkRejected\n"}
-{"Time":"2026-09-08T15:46:01.025522362Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestSymlinkRejected","Output":"--- PASS: TestSymlinkRejected (0.00s)\n"}
-{"Time":"2026-09-08T15:46:01.025563245Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestSymlinkRejected","Elapsed":0}
-{"Time":"2026-09-08T15:46:01.025691065Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestRecovery"}
-{"Time":"2026-09-08T15:46:01.02569664Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRecovery","Output":"=== RUN   TestRecovery\n"}
-{"Time":"2026-09-08T15:46:01.028464646Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRecovery","Output":"--- PASS: TestRecovery (0.00s)\n"}
-{"Time":"2026-09-08T15:46:01.028491825Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestRecovery","Elapsed":0}
-{"Time":"2026-09-08T15:46:01.02864295Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestRecoveryRefusesUnrelatedEdit"}
-{"Time":"2026-09-08T15:46:01.028653734Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRecoveryRefusesUnrelatedEdit","Output":"=== RUN   TestRecoveryRefusesUnrelatedEdit\n"}
-{"Time":"2026-09-08T15:46:01.030493486Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRecoveryRefusesUnrelatedEdit","Output":"--- PASS: TestRecoveryRefusesUnrelatedEdit (0.00s)\n"}
-{"Time":"2026-09-08T15:46:01.03051525Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestRecoveryRefusesUnrelatedEdit","Elapsed":0}
-{"Time":"2026-09-08T15:46:01.030520841Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestWriterLock"}
-{"Time":"2026-09-08T15:46:01.030524874Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestWriterLock","Output":"=== RUN   TestWriterLock\n"}
-{"Time":"2026-09-08T15:46:01.031559239Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestWriterLock","Output":"--- PASS: TestWriterLock (0.00s)\n"}
-{"Time":"2026-09-08T15:46:01.031573578Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestWriterLock","Elapsed":0}
-{"Time":"2026-09-08T15:46:01.03165415Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestModelValidation"}
-{"Time":"2026-09-08T15:46:01.031701809Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestModelValidation","Output":"=== RUN   TestModelValidation\n"}
-{"Time":"2026-09-08T15:46:01.032030535Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestModelValidation","Output":"--- PASS: TestModelValidation (0.00s)\n"}
-{"Time":"2026-09-08T15:46:01.032039465Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestModelValidation","Elapsed":0}
-{"Time":"2026-09-08T15:46:01.032219373Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestRoutesConflict"}
-{"Time":"2026-09-08T15:46:01.032224411Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRoutesConflict","Output":"=== RUN   TestRoutesConflict\n"}
-{"Time":"2026-09-08T15:46:01.032831131Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRoutesConflict","Output":"--- PASS: TestRoutesConflict (0.00s)\n"}
-{"Time":"2026-09-08T15:46:01.032846431Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestRoutesConflict","Elapsed":0}
-{"Time":"2026-09-08T15:46:01.032896034Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestStrictJSON"}
-{"Time":"2026-09-08T15:46:01.032903775Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestStrictJSON","Output":"=== RUN   TestStrictJSON\n"}
-{"Time":"2026-09-08T15:46:01.033245498Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestStrictJSON","Output":"--- PASS: TestStrictJSON (0.00s)\n"}
-{"Time":"2026-09-08T15:46:01.033252839Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestStrictJSON","Elapsed":0}
-{"Time":"2026-09-08T15:46:01.033278007Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestRelativePaths"}
-{"Time":"2026-09-08T15:46:01.033281929Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRelativePaths","Output":"=== RUN   TestRelativePaths\n"}
-{"Time":"2026-09-08T15:46:01.033505945Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRelativePaths","Output":"--- PASS: TestRelativePaths (0.00s)\n"}
-{"Time":"2026-09-08T15:46:01.033547367Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestRelativePaths","Elapsed":0}
-{"Time":"2026-09-08T15:46:01.033637826Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestOperationFileNames"}
-{"Time":"2026-09-08T15:46:01.033641969Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestOperationFileNames","Output":"=== RUN   TestOperationFileNames\n"}
-{"Time":"2026-09-08T15:46:01.033819445Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestOperationFileNames","Output":"--- PASS: TestOperationFileNames (0.00s)\n"}
-{"Time":"2026-09-08T15:46:01.033863792Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestOperationFileNames","Elapsed":0}
-{"Time":"2026-09-08T15:46:01.033956142Z","Action":"output","Package":"gsvc.local/cli/internal/project","Output":"PASS\n"}
-{"Time":"2026-09-08T15:46:01.47315503Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/fault","Output":"ok  \tgsvc.local/cli/internal/assets/runtime/fault\t1.022s\n"}
-{"Time":"2026-09-08T15:46:01.473221461Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/fault","Elapsed":1.024}
-{"Time":"2026-09-08T15:46:01.562330141Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/validate","Output":"ok  \tgsvc.local/cli/internal/assets/runtime/validate\t1.017s\n"}
-{"Time":"2026-09-08T15:46:01.562371447Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/validate","Elapsed":1.017}
-{"Time":"2026-09-08T15:46:01.595150566Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Output":"ok  \tgsvc.local/cli/internal/assets/runtime/httpx\t1.050s\n"}
-{"Time":"2026-09-08T15:46:01.595181346Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Elapsed":1.05}
-{"Time":"2026-09-08T15:46:02.036946989Z","Action":"output","Package":"gsvc.local/cli/internal/project","Output":"ok  \tgsvc.local/cli/internal/project\t1.091s\n"}
-{"Time":"2026-09-08T15:46:02.037097206Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Elapsed":1.091}
-{"Time":"2026-09-08T15:46:03.522576632Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestGeneratorCheckerAndGeneratedBuildAgree","Output":"--- PASS: TestGeneratorCheckerAndGeneratedBuildAgree (2.73s)\n"}
-{"Time":"2026-09-08T15:46:03.522652239Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestGeneratorCheckerAndGeneratedBuildAgree","Elapsed":2.73}
-{"Time":"2026-09-08T15:46:03.522659994Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestRerunPreservesBusinessAndConflictsBeforeWriting"}
-{"Time":"2026-09-08T15:46:03.522662829Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestRerunPreservesBusinessAndConflictsBeforeWriting","Output":"=== RUN   TestRerunPreservesBusinessAndConflictsBeforeWriting\n"}
-{"Time":"2026-09-08T15:46:03.761401714Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestRerunPreservesBusinessAndConflictsBeforeWriting","Output":"--- PASS: TestRerunPreservesBusinessAndConflictsBeforeWriting (0.24s)\n"}
-{"Time":"2026-09-08T15:46:03.761443208Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestRerunPreservesBusinessAndConflictsBeforeWriting","Elapsed":0.24}
-{"Time":"2026-09-08T15:46:03.761451696Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift"}
-{"Time":"2026-09-08T15:46:03.761454468Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift","Output":"=== RUN   TestArchitectureDrift\n"}
-{"Time":"2026-09-08T15:46:03.842849618Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/domain/bad.go"}
-{"Time":"2026-09-08T15:46:03.842885722Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/domain/bad.go","Output":"=== RUN   TestArchitectureDrift/ARCH001internal/payments/internal/domain/bad.go\n"}
-{"Time":"2026-09-08T15:46:03.895369789Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/domain/bad.go","Output":"--- PASS: TestArchitectureDrift/ARCH001internal/payments/internal/domain/bad.go (0.05s)\n"}
-{"Time":"2026-09-08T15:46:03.895421106Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/domain/bad.go","Elapsed":0.05}
-{"Time":"2026-09-08T15:46:03.895428589Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/app/bad.go"}
-{"Time":"2026-09-08T15:46:03.895435135Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/app/bad.go","Output":"=== RUN   TestArchitectureDrift/ARCH001internal/payments/internal/app/bad.go\n"}
-{"Time":"2026-09-08T15:46:04.001332009Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/app/bad.go","Output":"--- PASS: TestArchitectureDrift/ARCH001internal/payments/internal/app/bad.go (0.11s)\n"}
-{"Time":"2026-09-08T15:46:04.002358343Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/app/bad.go","Elapsed":0.11}
-{"Time":"2026-09-08T15:46:04.002466365Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH002internal/payments/internal/app/bad.go"}
-{"Time":"2026-09-08T15:46:04.002474272Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH002internal/payments/internal/app/bad.go","Output":"=== RUN   TestArchitectureDrift/ARCH002internal/payments/internal/app/bad.go\n"}
-{"Time":"2026-09-08T15:46:04.065003111Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH002internal/payments/internal/app/bad.go","Output":"--- PASS: TestArchitectureDrift/ARCH002internal/payments/internal/app/bad.go (0.06s)\n"}
-{"Time":"2026-09-08T15:46:04.065048433Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH002internal/payments/internal/app/bad.go","Elapsed":0.06}
-{"Time":"2026-09-08T15:46:04.065096861Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT001internal/shared/bad.go"}
-{"Time":"2026-09-08T15:46:04.065100942Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT001internal/shared/bad.go","Output":"=== RUN   TestArchitectureDrift/LAYOUT001internal/shared/bad.go\n"}
-{"Time":"2026-09-08T15:46:04.121104271Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT001internal/shared/bad.go","Output":"--- PASS: TestArchitectureDrift/LAYOUT001internal/shared/bad.go (0.06s)\n"}
-{"Time":"2026-09-08T15:46:04.121735692Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT001internal/shared/bad.go","Elapsed":0.06}
-{"Time":"2026-09-08T15:46:04.121755627Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT003internal/platform/fault/bad.go"}
-{"Time":"2026-09-08T15:46:04.121758453Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT003internal/platform/fault/bad.go","Output":"=== RUN   TestArchitectureDrift/LAYOUT003internal/platform/fault/bad.go\n"}
-{"Time":"2026-09-08T15:46:04.173907124Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT003internal/platform/fault/bad.go","Output":"--- PASS: TestArchitectureDrift/LAYOUT003internal/platform/fault/bad.go (0.05s)\n"}
-{"Time":"2026-09-08T15:46:04.173946985Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT003internal/platform/fault/bad.go","Elapsed":0.05}
-{"Time":"2026-09-08T15:46:04.176048261Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift","Output":"--- PASS: TestArchitectureDrift (0.41s)\n"}
-{"Time":"2026-09-08T15:46:04.176140333Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift","Elapsed":0.41}
-{"Time":"2026-09-08T15:46:04.176150112Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestStalePlanAndRouteChange"}
-{"Time":"2026-09-08T15:46:04.176153778Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestStalePlanAndRouteChange","Output":"=== RUN   TestStalePlanAndRouteChange\n"}
-{"Time":"2026-09-08T15:46:05.887101678Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestStalePlanAndRouteChange","Output":"--- PASS: TestStalePlanAndRouteChange (1.71s)\n"}
-{"Time":"2026-09-08T15:46:05.887134737Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestStalePlanAndRouteChange","Elapsed":1.71}
-{"Time":"2026-09-08T15:46:05.887142415Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestImplementedOperationPassesStrictVerification"}
-{"Time":"2026-09-08T15:46:05.887144937Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestImplementedOperationPassesStrictVerification","Output":"=== RUN   TestImplementedOperationPassesStrictVerification\n"}
-{"Time":"2026-09-08T15:46:07.456057626Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestImplementedOperationPassesStrictVerification","Output":"--- PASS: TestImplementedOperationPassesStrictVerification (1.57s)\n"}
-{"Time":"2026-09-08T15:46:07.456481528Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestImplementedOperationPassesStrictVerification","Elapsed":1.57}
-{"Time":"2026-09-08T15:46:07.45649192Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestMalformedConfigDoesNotFallback"}
-{"Time":"2026-09-08T15:46:07.456494889Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestMalformedConfigDoesNotFallback","Output":"=== RUN   TestMalformedConfigDoesNotFallback\n"}
-{"Time":"2026-09-08T15:46:07.48619368Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestMalformedConfigDoesNotFallback","Output":"--- PASS: TestMalformedConfigDoesNotFallback (0.03s)\n"}
-{"Time":"2026-09-08T15:46:07.486233547Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestMalformedConfigDoesNotFallback","Elapsed":0.03}
-{"Time":"2026-09-08T15:46:07.486244122Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestMissingManagedOutputCanBeRestored"}
-{"Time":"2026-09-08T15:46:07.486248016Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestMissingManagedOutputCanBeRestored","Output":"=== RUN   TestMissingManagedOutputCanBeRestored\n"}
-{"Time":"2026-09-08T15:46:07.629972429Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestMissingManagedOutputCanBeRestored","Output":"--- PASS: TestMissingManagedOutputCanBeRestored (0.14s)\n"}
-{"Time":"2026-09-08T15:46:07.63001939Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestMissingManagedOutputCanBeRestored","Elapsed":0.14}
-{"Time":"2026-09-08T15:46:07.63002899Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestVerificationFailureIsNotReportedAsSuccess"}
-{"Time":"2026-09-08T15:46:07.630031678Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestVerificationFailureIsNotReportedAsSuccess","Output":"=== RUN   TestVerificationFailureIsNotReportedAsSuccess\n"}
-{"Time":"2026-09-08T15:46:08.307345132Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestVerificationFailureIsNotReportedAsSuccess","Output":"--- PASS: TestVerificationFailureIsNotReportedAsSuccess (0.68s)\n"}
-{"Time":"2026-09-08T15:46:08.307383601Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestVerificationFailureIsNotReportedAsSuccess","Elapsed":0.68}
-{"Time":"2026-09-08T15:46:08.307405964Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Output":"PASS\n"}
-{"Time":"2026-09-08T15:46:09.309932997Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Output":"ok  \tgsvc.local/cli/internal/cli\t8.667s\n"}
-{"Time":"2026-09-08T15:46:09.310051114Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Elapsed":8.667}
+{"Time":"2026-09-14T21:17:53.19049Z","Action":"start","Package":"gsvc.local/cli/cmd/gsvc"}
+{"Time":"2026-09-14T21:17:53.190663Z","Action":"output","Package":"gsvc.local/cli/cmd/gsvc","Output":"?   \tgsvc.local/cli/cmd/gsvc\t[no test files]\n"}
+{"Time":"2026-09-14T21:17:53.190674Z","Action":"skip","Package":"gsvc.local/cli/cmd/gsvc","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.190677Z","Action":"start","Package":"gsvc.local/cli/internal/assets"}
+{"Time":"2026-09-14T21:17:53.190689Z","Action":"output","Package":"gsvc.local/cli/internal/assets","Output":"?   \tgsvc.local/cli/internal/assets\t[no test files]\n"}
+{"Time":"2026-09-14T21:17:53.190692Z","Action":"skip","Package":"gsvc.local/cli/internal/assets","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.664803Z","Action":"start","Package":"gsvc.local/cli/internal/assets/runtime/fault"}
+{"Time":"2026-09-14T21:17:53.710272Z","Action":"start","Package":"gsvc.local/cli/internal/assets/runtime/httpx"}
+{"Time":"2026-09-14T21:17:53.710339Z","Action":"start","Package":"gsvc.local/cli/internal/assets/runtime/validate"}
+{"Time":"2026-09-14T21:17:53.710409Z","Action":"start","Package":"gsvc.local/cli/internal/check"}
+{"Time":"2026-09-14T21:17:53.710444Z","Action":"output","Package":"gsvc.local/cli/internal/check","Output":"?   \tgsvc.local/cli/internal/check\t[no test files]\n"}
+{"Time":"2026-09-14T21:17:53.710458Z","Action":"skip","Package":"gsvc.local/cli/internal/check","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.723629Z","Action":"start","Package":"gsvc.local/cli/internal/cli"}
+{"Time":"2026-09-14T21:17:53.723698Z","Action":"start","Package":"gsvc.local/cli/internal/generate"}
+{"Time":"2026-09-14T21:17:53.723737Z","Action":"output","Package":"gsvc.local/cli/internal/generate","Output":"?   \tgsvc.local/cli/internal/generate\t[no test files]\n"}
+{"Time":"2026-09-14T21:17:53.723747Z","Action":"skip","Package":"gsvc.local/cli/internal/generate","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.723769Z","Action":"start","Package":"gsvc.local/cli/internal/project"}
+{"Time":"2026-09-14T21:17:53.817337Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/fault","Test":"TestWrappedKind"}
+{"Time":"2026-09-14T21:17:53.817378Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/fault","Test":"TestWrappedKind","Output":"=== RUN   TestWrappedKind\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.817406Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/fault","Test":"TestWrappedKind","Output":"--- PASS: TestWrappedKind (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.817408Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/fault","Test":"TestWrappedKind","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.817414Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/fault","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.848477Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/validate","Test":"TestDecimal"}
+{"Time":"2026-09-14T21:17:53.848523Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/validate","Test":"TestDecimal","Output":"=== RUN   TestDecimal\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.848589Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/validate","Test":"TestDecimal","Output":"--- PASS: TestDecimal (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.848597Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/validate","Test":"TestDecimal","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.848631Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/validate","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.871013Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON"}
+{"Time":"2026-09-14T21:17:53.871039Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON","Output":"=== RUN   TestDecodeJSON\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.871657Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/valid_zero"}
+{"Time":"2026-09-14T21:17:53.871683Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/valid_zero","Output":"=== RUN   TestDecodeJSON/valid_zero\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872282Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/valid_zero","Output":"--- PASS: TestDecodeJSON/valid_zero (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872293Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/valid_zero","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.872296Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/missing"}
+{"Time":"2026-09-14T21:17:53.872298Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/missing","Output":"=== RUN   TestDecodeJSON/missing\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872346Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/missing","Output":"--- PASS: TestDecodeJSON/missing (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872367Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/missing","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.872378Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/unknown"}
+{"Time":"2026-09-14T21:17:53.87238Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/unknown","Output":"=== RUN   TestDecodeJSON/unknown\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872455Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/unknown","Output":"--- PASS: TestDecodeJSON/unknown (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872458Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/unknown","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.87246Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/case_alias"}
+{"Time":"2026-09-14T21:17:53.872481Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/case_alias","Output":"=== RUN   TestDecodeJSON/case_alias\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872518Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/case_alias","Output":"--- PASS: TestDecodeJSON/case_alias (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872522Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/case_alias","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.872524Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/duplicate"}
+{"Time":"2026-09-14T21:17:53.872525Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/duplicate","Output":"=== RUN   TestDecodeJSON/duplicate\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872584Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/duplicate","Output":"--- PASS: TestDecodeJSON/duplicate (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872603Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/duplicate","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.872606Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/null"}
+{"Time":"2026-09-14T21:17:53.872624Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/null","Output":"=== RUN   TestDecodeJSON/null\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872628Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/null","Output":"--- PASS: TestDecodeJSON/null (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872656Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/null","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.872666Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/two_documents"}
+{"Time":"2026-09-14T21:17:53.872668Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/two_documents","Output":"=== RUN   TestDecodeJSON/two_documents\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872753Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/two_documents","Output":"--- PASS: TestDecodeJSON/two_documents (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872757Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/two_documents","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.872762Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/array"}
+{"Time":"2026-09-14T21:17:53.872764Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/array","Output":"=== RUN   TestDecodeJSON/array\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.8728Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/array","Output":"--- PASS: TestDecodeJSON/array (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.872804Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/array","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.872859Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/large"}
+{"Time":"2026-09-14T21:17:53.872864Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/large","Output":"=== RUN   TestDecodeJSON/large\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.875507Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/large","Output":"--- PASS: TestDecodeJSON/large (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.875516Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON/large","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.875519Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON","Output":"--- PASS: TestDecodeJSON (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.875521Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestDecodeJSON","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.875523Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestContentTypeRequired"}
+{"Time":"2026-09-14T21:17:53.875524Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestContentTypeRequired","Output":"=== RUN   TestContentTypeRequired\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.87556Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestContentTypeRequired","Output":"--- PASS: TestContentTypeRequired (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.875565Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestContentTypeRequired","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.875574Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestErrorDoesNotLeak"}
+{"Time":"2026-09-14T21:17:53.875576Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestErrorDoesNotLeak","Output":"=== RUN   TestErrorDoesNotLeak\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.875774Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestErrorDoesNotLeak","Output":"2026/09/14 21:17:53 ERROR request failed error=\"database password=secret\"\n"}
+{"Time":"2026-09-14T21:17:53.875924Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestErrorDoesNotLeak","Output":"--- PASS: TestErrorDoesNotLeak (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.875933Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestErrorDoesNotLeak","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.875936Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestQuery"}
+{"Time":"2026-09-14T21:17:53.875939Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestQuery","Output":"=== RUN   TestQuery\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.876013Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestQuery","Output":"--- PASS: TestQuery (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.876018Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestQuery","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.876026Z","Action":"run","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestPanicRecovery"}
+{"Time":"2026-09-14T21:17:53.876028Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestPanicRecovery","Output":"=== RUN   TestPanicRecovery\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.876072Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestPanicRecovery","Output":"2026/09/14 21:17:53 ERROR request panic panic=secret\n"}
+{"Time":"2026-09-14T21:17:53.876096Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestPanicRecovery","Output":"2026/09/14 21:17:53 ERROR request failed error=\"unexpected panic\"\n"}
+{"Time":"2026-09-14T21:17:53.876142Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestPanicRecovery","Output":"--- PASS: TestPanicRecovery (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.876146Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Test":"TestPanicRecovery","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.876166Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.880997Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestCapabilityCatalogIsValid"}
+{"Time":"2026-09-14T21:17:53.881027Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestCapabilityCatalogIsValid","Output":"=== RUN   TestCapabilityCatalogIsValid\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.881178Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestCapabilityCatalogIsValid","Output":"--- PASS: TestCapabilityCatalogIsValid (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.881183Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestCapabilityCatalogIsValid","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.881185Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestRecipeCatalogIsValid"}
+{"Time":"2026-09-14T21:17:53.881187Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRecipeCatalogIsValid","Output":"=== RUN   TestRecipeCatalogIsValid\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.881291Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRecipeCatalogIsValid","Output":"--- PASS: TestRecipeCatalogIsValid (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.881296Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestRecipeCatalogIsValid","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.881334Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestCatalogAccessorsReturnDeepCopies"}
+{"Time":"2026-09-14T21:17:53.881339Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestCatalogAccessorsReturnDeepCopies","Output":"=== RUN   TestCatalogAccessorsReturnDeepCopies\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.881409Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestCatalogAccessorsReturnDeepCopies","Output":"--- PASS: TestCatalogAccessorsReturnDeepCopies (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.881415Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestCatalogAccessorsReturnDeepCopies","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.881418Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestCatalogJSONUsesExplicitArrays"}
+{"Time":"2026-09-14T21:17:53.881419Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestCatalogJSONUsesExplicitArrays","Output":"=== RUN   TestCatalogJSONUsesExplicitArrays\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.882465Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestCatalogJSONUsesExplicitArrays","Output":"--- PASS: TestCatalogJSONUsesExplicitArrays (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.88247Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestCatalogJSONUsesExplicitArrays","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.882472Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestApplyRecipeIsAtomicIdempotentAndDerived"}
+{"Time":"2026-09-14T21:17:53.882476Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestApplyRecipeIsAtomicIdempotentAndDerived","Output":"=== RUN   TestApplyRecipeIsAtomicIdempotentAndDerived\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.882669Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestApplyRecipeIsAtomicIdempotentAndDerived","Output":"--- PASS: TestApplyRecipeIsAtomicIdempotentAndDerived (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.88268Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestApplyRecipeIsAtomicIdempotentAndDerived","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.882687Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestApplyRecipeRejectsUnknownAndVersionMismatchWithoutMutation"}
+{"Time":"2026-09-14T21:17:53.882689Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestApplyRecipeRejectsUnknownAndVersionMismatchWithoutMutation","Output":"=== RUN   TestApplyRecipeRejectsUnknownAndVersionMismatchWithoutMutation\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.882722Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestApplyRecipeRejectsUnknownAndVersionMismatchWithoutMutation","Output":"--- PASS: TestApplyRecipeRejectsUnknownAndVersionMismatchWithoutMutation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.882726Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestApplyRecipeRejectsUnknownAndVersionMismatchWithoutMutation","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.882737Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestWriterPreservationAndPreflight"}
+{"Time":"2026-09-14T21:17:53.882739Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestWriterPreservationAndPreflight","Output":"=== RUN   TestWriterPreservationAndPreflight\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.905655Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestMachineProtocol"}
+{"Time":"2026-09-14T21:17:53.905679Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestMachineProtocol","Output":"=== RUN   TestMachineProtocol\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.909913Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestWriterPreservationAndPreflight","Output":"--- PASS: TestWriterPreservationAndPreflight (0.03s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.909923Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestWriterPreservationAndPreflight","Elapsed":0.03}
+{"Time":"2026-09-14T21:17:53.909948Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestSymlinkRejected"}
+{"Time":"2026-09-14T21:17:53.90995Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestSymlinkRejected","Output":"=== RUN   TestSymlinkRejected\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.910569Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestSymlinkRejected","Output":"--- PASS: TestSymlinkRejected (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.910573Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestSymlinkRejected","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.910584Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestRecovery"}
+{"Time":"2026-09-14T21:17:53.910586Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRecovery","Output":"=== RUN   TestRecovery\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.916686Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRecovery","Output":"--- PASS: TestRecovery (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.916696Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestRecovery","Elapsed":0.01}
+{"Time":"2026-09-14T21:17:53.916699Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestRecoveryRefusesUnrelatedEdit"}
+{"Time":"2026-09-14T21:17:53.9167Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRecoveryRefusesUnrelatedEdit","Output":"=== RUN   TestRecoveryRefusesUnrelatedEdit\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.917806Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRecoveryRefusesUnrelatedEdit","Output":"--- PASS: TestRecoveryRefusesUnrelatedEdit (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.917816Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestRecoveryRefusesUnrelatedEdit","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.91782Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestWriterLock"}
+{"Time":"2026-09-14T21:17:53.917822Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestWriterLock","Output":"=== RUN   TestWriterLock\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.918426Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestWriterLock","Output":"--- PASS: TestWriterLock (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.918432Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestWriterLock","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.918435Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestModelValidation"}
+{"Time":"2026-09-14T21:17:53.918436Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestModelValidation","Output":"=== RUN   TestModelValidation\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.918566Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestModelValidation","Output":"--- PASS: TestModelValidation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.91857Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestModelValidation","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.918583Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestCapabilityValidation"}
+{"Time":"2026-09-14T21:17:53.918586Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestCapabilityValidation","Output":"=== RUN   TestCapabilityValidation\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.918732Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestCapabilityValidation","Output":"--- PASS: TestCapabilityValidation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.918744Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestCapabilityValidation","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.918758Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestRoutesConflict"}
+{"Time":"2026-09-14T21:17:53.91876Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRoutesConflict","Output":"=== RUN   TestRoutesConflict\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.918937Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRoutesConflict","Output":"--- PASS: TestRoutesConflict (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.918956Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestRoutesConflict","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.918969Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestStrictJSON"}
+{"Time":"2026-09-14T21:17:53.918971Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestStrictJSON","Output":"=== RUN   TestStrictJSON\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.919101Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestStrictJSON","Output":"--- PASS: TestStrictJSON (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.919106Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestStrictJSON","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.919116Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestRelativePaths"}
+{"Time":"2026-09-14T21:17:53.919117Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRelativePaths","Output":"=== RUN   TestRelativePaths\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.919156Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestRelativePaths","Output":"--- PASS: TestRelativePaths (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.91916Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestRelativePaths","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.919171Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestOperationFileNames"}
+{"Time":"2026-09-14T21:17:53.919172Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestOperationFileNames","Output":"=== RUN   TestOperationFileNames\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.919228Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestOperationFileNames","Output":"--- PASS: TestOperationFileNames (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.919233Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestOperationFileNames","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.919246Z","Action":"run","Package":"gsvc.local/cli/internal/project","Test":"TestLoadForUpgradeAcceptsOnlyVerifiedV1OrCurrent"}
+{"Time":"2026-09-14T21:17:53.919251Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestLoadForUpgradeAcceptsOnlyVerifiedV1OrCurrent","Output":"=== RUN   TestLoadForUpgradeAcceptsOnlyVerifiedV1OrCurrent\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.920748Z","Action":"output","Package":"gsvc.local/cli/internal/project","Test":"TestLoadForUpgradeAcceptsOnlyVerifiedV1OrCurrent","Output":"--- PASS: TestLoadForUpgradeAcceptsOnlyVerifiedV1OrCurrent (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:53.920765Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Test":"TestLoadForUpgradeAcceptsOnlyVerifiedV1OrCurrent","Elapsed":0}
+{"Time":"2026-09-14T21:17:53.920768Z","Action":"output","Package":"gsvc.local/cli/internal/project","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:54.07037Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestMachineProtocol","Output":"--- PASS: TestMachineProtocol (0.16s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:54.07039Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestMachineProtocol","Elapsed":0.16}
+{"Time":"2026-09-14T21:17:54.070394Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestRecipeUsesGuardedPlanAndIsIdempotent"}
+{"Time":"2026-09-14T21:17:54.070396Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestRecipeUsesGuardedPlanAndIsIdempotent","Output":"=== RUN   TestRecipeUsesGuardedPlanAndIsIdempotent\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:54.819498Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/fault","Output":"ok  \tgsvc.local/cli/internal/assets/runtime/fault\t1.154s\n"}
+{"Time":"2026-09-14T21:17:54.81953Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/fault","Elapsed":1.155}
+{"Time":"2026-09-14T21:17:54.854683Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/validate","Output":"ok  \tgsvc.local/cli/internal/assets/runtime/validate\t1.144s\n"}
+{"Time":"2026-09-14T21:17:54.854717Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/validate","Elapsed":1.144}
+{"Time":"2026-09-14T21:17:54.883297Z","Action":"output","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Output":"ok  \tgsvc.local/cli/internal/assets/runtime/httpx\t1.173s\n"}
+{"Time":"2026-09-14T21:17:54.883313Z","Action":"pass","Package":"gsvc.local/cli/internal/assets/runtime/httpx","Elapsed":1.173}
+{"Time":"2026-09-14T21:17:54.926058Z","Action":"output","Package":"gsvc.local/cli/internal/project","Output":"ok  \tgsvc.local/cli/internal/project\t1.202s\n"}
+{"Time":"2026-09-14T21:17:54.926091Z","Action":"pass","Package":"gsvc.local/cli/internal/project","Elapsed":1.202}
+{"Time":"2026-09-14T21:17:56.550052Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestRecipeUsesGuardedPlanAndIsIdempotent","Output":"--- PASS: TestRecipeUsesGuardedPlanAndIsIdempotent (2.48s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:56.550079Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestRecipeUsesGuardedPlanAndIsIdempotent","Elapsed":2.48}
+{"Time":"2026-09-14T21:17:56.550083Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestCapabilitiesDetectMissingGeneratedContract"}
+{"Time":"2026-09-14T21:17:56.550087Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestCapabilitiesDetectMissingGeneratedContract","Output":"=== RUN   TestCapabilitiesDetectMissingGeneratedContract\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:56.855437Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestCapabilitiesDetectMissingGeneratedContract","Output":"--- PASS: TestCapabilitiesDetectMissingGeneratedContract (0.31s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:56.855456Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestCapabilitiesDetectMissingGeneratedContract","Elapsed":0.31}
+{"Time":"2026-09-14T21:17:56.855471Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestCapabilityPolicyAllowsOnlyDeclaredImplementationBoundaries"}
+{"Time":"2026-09-14T21:17:56.855473Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestCapabilityPolicyAllowsOnlyDeclaredImplementationBoundaries","Output":"=== RUN   TestCapabilityPolicyAllowsOnlyDeclaredImplementationBoundaries\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:57.414783Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestCapabilityPolicyAllowsOnlyDeclaredImplementationBoundaries","Output":"--- PASS: TestCapabilityPolicyAllowsOnlyDeclaredImplementationBoundaries (0.56s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:57.414801Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestCapabilityPolicyAllowsOnlyDeclaredImplementationBoundaries","Elapsed":0.56}
+{"Time":"2026-09-14T21:17:57.414806Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestCapabilityImplementationBoundaryRequiresDeclaration"}
+{"Time":"2026-09-14T21:17:57.414807Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestCapabilityImplementationBoundaryRequiresDeclaration","Output":"=== RUN   TestCapabilityImplementationBoundaryRequiresDeclaration\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:57.616831Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestCapabilityImplementationBoundaryRequiresDeclaration","Output":"--- PASS: TestCapabilityImplementationBoundaryRequiresDeclaration (0.20s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:57.616849Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestCapabilityImplementationBoundaryRequiresDeclaration","Elapsed":0.2}
+{"Time":"2026-09-14T21:17:57.616857Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestRecipeSymlinkPreflightWritesNothing"}
+{"Time":"2026-09-14T21:17:57.616859Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestRecipeSymlinkPreflightWritesNothing","Output":"=== RUN   TestRecipeSymlinkPreflightWritesNothing\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:57.789706Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestRecipeSymlinkPreflightWritesNothing","Output":"--- PASS: TestRecipeSymlinkPreflightWritesNothing (0.17s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:57.789721Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestRecipeSymlinkPreflightWritesNothing","Elapsed":0.17}
+{"Time":"2026-09-14T21:17:57.789727Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestExplicitV1UpgradeUsesReviewedPlan"}
+{"Time":"2026-09-14T21:17:57.789728Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestExplicitV1UpgradeUsesReviewedPlan","Output":"=== RUN   TestExplicitV1UpgradeUsesReviewedPlan\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:57.958018Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestExplicitV1UpgradeUsesReviewedPlan","Output":"--- PASS: TestExplicitV1UpgradeUsesReviewedPlan (0.17s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:57.95803Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestExplicitV1UpgradeUsesReviewedPlan","Elapsed":0.17}
+{"Time":"2026-09-14T21:17:57.958033Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestGeneratorCheckerAndGeneratedBuildAgree"}
+{"Time":"2026-09-14T21:17:57.958034Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestGeneratorCheckerAndGeneratedBuildAgree","Output":"=== RUN   TestGeneratorCheckerAndGeneratedBuildAgree\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:59.882941Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestGeneratorCheckerAndGeneratedBuildAgree","Output":"--- PASS: TestGeneratorCheckerAndGeneratedBuildAgree (1.92s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:17:59.882957Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestGeneratorCheckerAndGeneratedBuildAgree","Elapsed":1.92}
+{"Time":"2026-09-14T21:17:59.88296Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestRerunPreservesBusinessAndConflictsBeforeWriting"}
+{"Time":"2026-09-14T21:17:59.882962Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestRerunPreservesBusinessAndConflictsBeforeWriting","Output":"=== RUN   TestRerunPreservesBusinessAndConflictsBeforeWriting\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.202595Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestRerunPreservesBusinessAndConflictsBeforeWriting","Output":"--- PASS: TestRerunPreservesBusinessAndConflictsBeforeWriting (0.32s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.202613Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestRerunPreservesBusinessAndConflictsBeforeWriting","Elapsed":0.32}
+{"Time":"2026-09-14T21:18:00.202619Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift"}
+{"Time":"2026-09-14T21:18:00.202621Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift","Output":"=== RUN   TestArchitectureDrift\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.433517Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/domain/bad.go"}
+{"Time":"2026-09-14T21:18:00.433534Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/domain/bad.go","Output":"=== RUN   TestArchitectureDrift/ARCH001internal/payments/internal/domain/bad.go\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.462989Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/domain/bad.go","Output":"--- PASS: TestArchitectureDrift/ARCH001internal/payments/internal/domain/bad.go (0.03s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.463006Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/domain/bad.go","Elapsed":0.03}
+{"Time":"2026-09-14T21:18:00.463013Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/app/bad.go"}
+{"Time":"2026-09-14T21:18:00.463014Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/app/bad.go","Output":"=== RUN   TestArchitectureDrift/ARCH001internal/payments/internal/app/bad.go\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.489277Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/app/bad.go","Output":"--- PASS: TestArchitectureDrift/ARCH001internal/payments/internal/app/bad.go (0.03s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.489286Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH001internal/payments/internal/app/bad.go","Elapsed":0.03}
+{"Time":"2026-09-14T21:18:00.489293Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH002internal/payments/internal/app/bad.go"}
+{"Time":"2026-09-14T21:18:00.489295Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH002internal/payments/internal/app/bad.go","Output":"=== RUN   TestArchitectureDrift/ARCH002internal/payments/internal/app/bad.go\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.51573Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH002internal/payments/internal/app/bad.go","Output":"--- PASS: TestArchitectureDrift/ARCH002internal/payments/internal/app/bad.go (0.03s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.515744Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/ARCH002internal/payments/internal/app/bad.go","Elapsed":0.03}
+{"Time":"2026-09-14T21:18:00.515749Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT001internal/shared/bad.go"}
+{"Time":"2026-09-14T21:18:00.51575Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT001internal/shared/bad.go","Output":"=== RUN   TestArchitectureDrift/LAYOUT001internal/shared/bad.go\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.542208Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT001internal/shared/bad.go","Output":"--- PASS: TestArchitectureDrift/LAYOUT001internal/shared/bad.go (0.03s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.542219Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT001internal/shared/bad.go","Elapsed":0.03}
+{"Time":"2026-09-14T21:18:00.542222Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT003internal/platform/fault/bad.go"}
+{"Time":"2026-09-14T21:18:00.542223Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT003internal/platform/fault/bad.go","Output":"=== RUN   TestArchitectureDrift/LAYOUT003internal/platform/fault/bad.go\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.567854Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT003internal/platform/fault/bad.go","Output":"--- PASS: TestArchitectureDrift/LAYOUT003internal/platform/fault/bad.go (0.03s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.567867Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift/LAYOUT003internal/platform/fault/bad.go","Elapsed":0.03}
+{"Time":"2026-09-14T21:18:00.570771Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift","Output":"--- PASS: TestArchitectureDrift (0.37s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:00.570778Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestArchitectureDrift","Elapsed":0.37}
+{"Time":"2026-09-14T21:18:00.570786Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestStalePlanAndRouteChange"}
+{"Time":"2026-09-14T21:18:00.570787Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestStalePlanAndRouteChange","Output":"=== RUN   TestStalePlanAndRouteChange\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:01.996202Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestStalePlanAndRouteChange","Output":"--- PASS: TestStalePlanAndRouteChange (1.43s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:01.996219Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestStalePlanAndRouteChange","Elapsed":1.43}
+{"Time":"2026-09-14T21:18:01.996231Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestImplementedOperationPassesStrictVerification"}
+{"Time":"2026-09-14T21:18:01.996233Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestImplementedOperationPassesStrictVerification","Output":"=== RUN   TestImplementedOperationPassesStrictVerification\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:03.299031Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestImplementedOperationPassesStrictVerification","Output":"--- PASS: TestImplementedOperationPassesStrictVerification (1.30s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:03.299044Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestImplementedOperationPassesStrictVerification","Elapsed":1.3}
+{"Time":"2026-09-14T21:18:03.299056Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestMalformedConfigDoesNotFallback"}
+{"Time":"2026-09-14T21:18:03.299058Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestMalformedConfigDoesNotFallback","Output":"=== RUN   TestMalformedConfigDoesNotFallback\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:03.418398Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestMalformedConfigDoesNotFallback","Output":"--- PASS: TestMalformedConfigDoesNotFallback (0.12s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:03.418418Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestMalformedConfigDoesNotFallback","Elapsed":0.12}
+{"Time":"2026-09-14T21:18:03.418423Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestMissingManagedOutputCanBeRestored"}
+{"Time":"2026-09-14T21:18:03.418425Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestMissingManagedOutputCanBeRestored","Output":"=== RUN   TestMissingManagedOutputCanBeRestored\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:03.617519Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestMissingManagedOutputCanBeRestored","Output":"--- PASS: TestMissingManagedOutputCanBeRestored (0.20s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:03.617533Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestMissingManagedOutputCanBeRestored","Elapsed":0.2}
+{"Time":"2026-09-14T21:18:03.617536Z","Action":"run","Package":"gsvc.local/cli/internal/cli","Test":"TestVerificationFailureIsNotReportedAsSuccess"}
+{"Time":"2026-09-14T21:18:03.617537Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestVerificationFailureIsNotReportedAsSuccess","Output":"=== RUN   TestVerificationFailureIsNotReportedAsSuccess\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:04.547923Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Test":"TestVerificationFailureIsNotReportedAsSuccess","Output":"--- PASS: TestVerificationFailureIsNotReportedAsSuccess (0.93s)\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:04.547952Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Test":"TestVerificationFailureIsNotReportedAsSuccess","Elapsed":0.93}
+{"Time":"2026-09-14T21:18:04.548007Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-09-14T21:18:05.555461Z","Action":"output","Package":"gsvc.local/cli/internal/cli","Output":"ok  \tgsvc.local/cli/internal/cli\t11.832s\n"}
+{"Time":"2026-09-14T21:18:05.555494Z","Action":"pass","Package":"gsvc.local/cli/internal/cli","Elapsed":11.832}

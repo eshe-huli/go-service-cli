@@ -1,0 +1,13 @@
+package serviceinfo
+
+import "testing"
+
+func TestGeneratedManifestDeclaresContracts(t *testing.T) {
+	manifest := Current()
+	if manifest.Service == "" || manifest.GoModule == "" || manifest.ArchitecturePolicy == "" {
+		t.Fatal("generated manifest identity is incomplete")
+	}
+	if len(manifest.Capabilities) == 0 {
+		t.Fatal("generated manifest omitted declared capabilities")
+	}
+}

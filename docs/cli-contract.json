@@ -1,10 +1,215 @@
 {
   "schema_version": 1,
   "tool": "gsvc",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "ok": true,
   "command": "contract",
   "data": {
+    "capabilities": [
+      {
+        "id": "eventing.transactional-inbox",
+        "version": 1,
+        "description": "Durable, idempotent event admission contracts shared by broker and authenticated HTTP adapters.",
+        "maturity": "contract-scaffold",
+        "requires": [],
+        "consumer_import": "internal/platform/inbox",
+        "outputs": [
+          {
+            "path": "internal/platform/inbox/contracts_gen.go",
+            "template": "capability_transactional_inbox.go"
+          },
+          {
+            "path": "internal/platform/inbox/contracts_gen_test.go",
+            "template": "capability_transactional_inbox_test.go"
+          }
+        ],
+        "extensions": [
+          {
+            "root": "internal/platform/inbox/adapter/kafka",
+            "description": "Kafka transport adapter; admission remains authenticated and schema allowlisted.",
+            "external_imports": [
+              "github.com/twmb/franz-go/pkg/kgo"
+            ]
+          },
+          {
+            "root": "internal/platform/inbox/adapter/http",
+            "description": "Authenticated internal HTTP admission adapter using the standard library.",
+            "external_imports": []
+          },
+          {
+            "root": "internal/platform/inbox/adapter/postgres",
+            "description": "PostgreSQL transactional inbox adapter.",
+            "external_imports": [
+              "github.com/jackc/pgx/v5"
+            ]
+          }
+        ],
+        "implementation_required": [
+          "implement an allowlisted, schema-versioned broker adapter and authenticated HTTP adapter",
+          "commit the inbox receipt and desired-state mutation atomically in a real database transaction",
+          "prove duplicate, out-of-order, poison-message, retry, dead-letter, and restart behavior"
+        ]
+      },
+      {
+        "id": "identity-provider.port",
+        "version": 1,
+        "description": "Provider-neutral organization, subject, role-snapshot, and service-boundary grant contracts.",
+        "maturity": "contract-scaffold",
+        "requires": [],
+        "consumer_import": "internal/platform/identityprovider",
+        "outputs": [
+          {
+            "path": "internal/platform/identityprovider/contracts_gen.go",
+            "template": "capability_identity_provider.go"
+          },
+          {
+            "path": "internal/platform/identityprovider/contracts_gen_test.go",
+            "template": "capability_identity_provider_test.go"
+          }
+        ],
+        "extensions": [
+          {
+            "root": "internal/platform/identityprovider/adapter",
+            "description": "Provider adapter implemented against the neutral port; external SDKs require a reviewed capability version.",
+            "external_imports": []
+          }
+        ],
+        "implementation_required": [
+          "implement a provider adapter outside generated code and authenticate it with a reviewed machine credential",
+          "use fenced canonical subject reservations; never correlate or merge subjects by email or phone",
+          "route external-home access through existing-subject authorization; never create a target-organization subject for EXTERNAL_HOME_ORG",
+          "prove organization, subject, role snapshot, service-boundary grant, revocation, collision, and read-after-write behavior"
+        ]
+      },
+      {
+        "id": "platform.http-command-ingress",
+        "version": 1,
+        "description": "Verified principal, provenance, idempotency, and request-context contracts for internal commands.",
+        "maturity": "contract-scaffold",
+        "requires": [],
+        "consumer_import": "internal/platform/commanding",
+        "outputs": [
+          {
+            "path": "internal/platform/commanding/context_gen.go",
+            "template": "capability_http_command_ingress.go"
+          },
+          {
+            "path": "internal/platform/commanding/context_gen_test.go",
+            "template": "capability_http_command_ingress_test.go"
+          }
+        ],
+        "extensions": [
+          {
+            "root": "internal/platform/commanding/adapter",
+            "description": "Authenticated HTTP context adapter; credential verification remains developer-owned.",
+            "external_imports": []
+          }
+        ],
+        "implementation_required": [
+          "authenticate the caller before constructing a verified command context",
+          "authorize service and action scope through the owning platform authorities",
+          "prove replay, missing provenance, wrong audience, cancellation, timeout, and denial behavior"
+        ]
+      },
+      {
+        "id": "platform.service-runtime",
+        "version": 1,
+        "description": "A generated service manifest that declares contract capabilities without asserting runtime readiness.",
+        "maturity": "contract-scaffold",
+        "requires": [],
+        "consumer_import": "internal/platform/serviceinfo",
+        "outputs": [
+          {
+            "path": "internal/platform/serviceinfo/manifest_gen.go",
+            "template": "capability_service_runtime.go"
+          },
+          {
+            "path": "internal/platform/serviceinfo/manifest_gen_test.go",
+            "template": "capability_service_runtime_test.go"
+          }
+        ],
+        "extensions": [
+          {
+            "root": "internal/platform/serviceinfo/adapter",
+            "description": "Service catalog and dependency-readiness adapter.",
+            "external_imports": []
+          }
+        ],
+        "implementation_required": [
+          "wire truthful liveness and dependency-aware readiness",
+          "register the immutable revision and declared capabilities through authenticated Service Access",
+          "keep source, CI, artifact, deployment, runtime, and authorized actor proof separate"
+        ]
+      },
+      {
+        "id": "projection.operation-journal",
+        "version": 1,
+        "description": "Durable desired-state operation, attempt, supersession, and terminal-outcome contracts.",
+        "maturity": "contract-scaffold",
+        "requires": [],
+        "consumer_import": "internal/platform/operationjournal",
+        "outputs": [
+          {
+            "path": "internal/platform/operationjournal/contracts_gen.go",
+            "template": "capability_operation_journal.go"
+          },
+          {
+            "path": "internal/platform/operationjournal/contracts_gen_test.go",
+            "template": "capability_operation_journal_test.go"
+          }
+        ],
+        "extensions": [
+          {
+            "root": "internal/platform/operationjournal/adapter/postgres",
+            "description": "PostgreSQL operation-journal adapter.",
+            "external_imports": [
+              "github.com/jackc/pgx/v5"
+            ]
+          }
+        ],
+        "implementation_required": [
+          "implement durable compare-and-set transitions and deterministic operation keys",
+          "persist provider receipts without storing credentials or raw sensitive tokens",
+          "prove duplicate, superseded, retryable, terminal, crash-between-write-and-commit, and manual-repair states"
+        ]
+      },
+      {
+        "id": "projection.reconciliation-worker",
+        "version": 1,
+        "description": "Leased, fenced, bounded reconciliation worker contracts for one active provider writer.",
+        "maturity": "contract-scaffold",
+        "requires": [
+          {
+            "id": "projection.operation-journal",
+            "version": 1
+          }
+        ],
+        "consumer_import": "internal/platform/reconciliation",
+        "outputs": [
+          {
+            "path": "internal/platform/reconciliation/contracts_gen.go",
+            "template": "capability_reconciliation_worker.go"
+          },
+          {
+            "path": "internal/platform/reconciliation/contracts_gen_test.go",
+            "template": "capability_reconciliation_worker_test.go"
+          }
+        ],
+        "extensions": [
+          {
+            "root": "internal/platform/reconciliation/adapter",
+            "description": "Worker scheduling, lease, and execution adapters.",
+            "external_imports": []
+          }
+        ],
+        "implementation_required": [
+          "implement leases or fencing that prevent concurrent provider mutation",
+          "bound retries and distinguish retryable, terminal, superseded, and operator-required outcomes",
+          "prove cancellation, lease expiry, failover, provider-success/local-commit-failure, and restart reuse"
+        ]
+      }
+    ],
+    "capability_maturity": "contract-scaffold",
     "commands": [
       {
         "name": "version",
@@ -305,6 +510,33 @@
         ]
       },
       {
+        "name": "upgrade",
+        "description": "Explicitly migrate a supported older project contract to this CLI version",
+        "mutation": true,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "root",
+            "type": "string",
+            "description": "Project directory (default: find from current directory)"
+          },
+          {
+            "name": "dry-run",
+            "type": "boolean",
+            "description": "Plan without writing"
+          },
+          {
+            "name": "expect",
+            "type": "string",
+            "description": "Require the exact reviewed plan ID"
+          }
+        ]
+      },
+      {
         "name": "sync",
         "description": "Reconcile managed output without overwriting developer-owned code",
         "mutation": true,
@@ -328,6 +560,52 @@
             "name": "expect",
             "type": "string",
             "description": "Require the exact reviewed plan ID"
+          }
+        ]
+      },
+      {
+        "name": "recipe",
+        "description": "List or apply a typed capability recipe through the guarded project plan",
+        "argument": "name",
+        "optional_argument": true,
+        "mutation": true,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "root",
+            "type": "string",
+            "description": "Project directory (default: find from current directory)"
+          },
+          {
+            "name": "dry-run",
+            "type": "boolean",
+            "description": "Plan without writing"
+          },
+          {
+            "name": "expect",
+            "type": "string",
+            "description": "Require the exact reviewed plan ID"
+          }
+        ]
+      },
+      {
+        "name": "capabilities",
+        "description": "Inspect declared capability contracts and their scaffold status",
+        "mutation": false,
+        "flags": [
+          {
+            "name": "json",
+            "type": "boolean",
+            "description": "Return one JSON envelope on stdout"
+          },
+          {
+            "name": "root",
+            "type": "string",
+            "description": "Project directory (default: find from current directory)"
           }
         ]
       },
@@ -420,11 +698,14 @@
       "no shell execution or downloads during generation",
       "JSON mode emits one envelope, including failures",
       "dry-run does not create files",
-      "identical structural commands are idempotent",
+      "identical structural commands and recipe applications are idempotent",
+      "recipes only declare versioned capabilities; the renderer owns their contract files",
+      "declared capabilities are contract scaffolds, not proof of runtime behavior",
       "add rejects changed existing contracts; change performs explicit contract regeneration without migrating business behavior"
     ],
     "policy": {
       "application": "own domain/application packages and platform fault/validate; no transport, persistence, filesystem, or peer business imports",
+      "capabilities": "versioned manifest declarations rendered from the canonical catalog; declared means source structure only, while runtime proof remains external",
       "composition": "ordinary constructors, operation-specific dependency structs, bootstrap.Wire",
       "cross_module": "consumer-owned interfaces injected at composition; no direct peer module imports",
       "domain": "permitted standard-library packages only; no framework, transport, database, filesystem, or peer business imports",
@@ -436,20 +717,75 @@
         "gofmt",
         "strict mode rejects pending scaffolds and test skips"
       ],
-      "id": "go-service/v1",
+      "id": "go-service/v2",
       "layout": "cmd/api; internal/bootstrap; internal/\u003cbusiness\u003e/internal/{domain,app,adapter/{httpapi,postgres}}",
       "limitations": [
         "structural checks do not prove business correctness, authorization, transactional safety, or concurrency safety",
         "not a sandbox or defense against deliberate checker/CI edits",
         "generated API is unauthenticated and loopback-only by default",
-        "explicit contract regeneration is supported; business-behavior migrations and CLI-version upgrades are not automatic"
+        "explicit contract regeneration is supported; business behavior is never automatically migrated",
+        "only the documented gsvc 0.1.0 go-service/v1 project upgrade is supported; other versions are rejected"
       ],
       "ownership": "CLI owns contracts, routes, generated wiring, runtime and agent instructions; developers own behavior, ports, adapters and business tests",
       "persistence": "postgres adapter; pgx/v5 import family allowed; adapter and SQL generation not yet supplied",
+      "recipes": "deterministic capability compositions applied through the ordinary dry-run, plan, expect and ownership writer; recipe names are derived, not persisted",
       "transport": "net/http; GET queries; POST commands; JSON; explicit generated registration"
     },
+    "project_schema_version": 2,
+    "recipes": [
+      {
+        "name": "identity-provider-orchestrator",
+        "version": 1,
+        "description": "Provider-neutral identity projection control-plane contracts; concrete provider and Kafka adapters remain developer-owned.",
+        "capabilities": [
+          {
+            "id": "platform.service-runtime",
+            "version": 1
+          },
+          {
+            "id": "platform.http-command-ingress",
+            "version": 1
+          },
+          {
+            "id": "eventing.transactional-inbox",
+            "version": 1
+          },
+          {
+            "id": "projection.operation-journal",
+            "version": 1
+          },
+          {
+            "id": "identity-provider.port",
+            "version": 1
+          },
+          {
+            "id": "projection.reconciliation-worker",
+            "version": 1
+          }
+        ]
+      },
+      {
+        "name": "projection-worker",
+        "version": 1,
+        "description": "Durable event intake, operation journal, and single-writer reconciliation contracts.",
+        "capabilities": [
+          {
+            "id": "eventing.transactional-inbox",
+            "version": 1
+          },
+          {
+            "id": "projection.operation-journal",
+            "version": 1
+          },
+          {
+            "id": "projection.reconciliation-worker",
+            "version": 1
+          }
+        ]
+      }
+    ],
     "schema_version": 1,
     "tool": "gsvc",
-    "version": "0.1.0"
+    "version": "0.2.0"
   }
 }
