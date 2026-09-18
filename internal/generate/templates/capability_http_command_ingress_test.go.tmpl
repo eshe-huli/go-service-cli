@@ -1,0 +1,32 @@
+package commanding
+
+import (
+	"testing"
+	"time"
+)
+
+func TestContextValidation(t *testing.T) {
+	valid := Context{
+		Principal: VerifiedPrincipal{Kind: PrincipalMachine, MachineID: "service-instance", AuthenticatedBy: "private-key-jwt"},
+		RequestID: "request-1", CorrelationID: "correlation-1", IdempotencyKey: "operation-1", ReceivedAt: time.Now(),
+	}
+	for _, test := range []struct {
+		name    string
+		context Context
+		wantErr bool
+	}{
+		{name: "verified machine", context: valid},
+		{name: "missing principal", context: func() Context { value := valid; value.Principal.MachineID = ""; return value }(), wantErr: true},
+		{name: "ambiguous principal", context: func() Context { value := valid; value.Principal.SubjectID = "subject-1"; return value }(), wantErr: true},
+		{name: "missing principal kind", context: func() Context { value := valid; value.Principal.Kind = ""; return value }(), wantErr: true},
+		{name: "missing provenance", context: func() Context { value := valid; value.Principal.AuthenticatedBy = ""; return value }(), wantErr: true},
+		{name: "missing correlation", context: func() Context { value := valid; value.CorrelationID = ""; return value }(), wantErr: true},
+		{name: "missing idempotency", context: func() Context { value := valid; value.IdempotencyKey = ""; return value }(), wantErr: true},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			if got := test.context.Validate(); (got != nil) != test.wantErr {
+				t.Fatalf("Validate() error = %v, wantErr %v", got, test.wantErr)
+			}
+		})
+	}
+}

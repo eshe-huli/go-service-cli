@@ -1,0 +1,181 @@
+package reconciliation
+
+import (
+	"context"
+	"errors"
+	"testing"
+	"time"
+
+	"{{.Project.GoModule}}/internal/platform/operationjournal"
+)
+
+const (
+	testOperationID = "operation-1"
+	testWriterID    = "worker-1"
+	testFenceToken  = "fence-1"
+)
+
+type testClaimer struct {
+	found     bool
+	claimErr  error
+	completed bool
+	claim     Claim
+	now       time.Time
+}
+
+func (c *testClaimer) ClaimDue(context.Context, string, time.Time, time.Duration) (Claim, bool, error) {
+	return c.claim, c.found, c.claimErr
+}
+func (c *testClaimer) Complete(_ context.Context, completion Completion) error {
+	if err := completion.ValidateAgainst(c.claim, c.now); err != nil {
+		return err
+	}
+	c.completed = true
+	return nil
+}
+
+type testExecutor struct {
+	err    error
+	called bool
+}
+
+func (e *testExecutor) Apply(context.Context, Claim) (Outcome, error) {
+	e.called = true
+	return Outcome{Kind: OutcomeApplied}, e.err
+}
+
+func TestWorkerRunOnce(t *testing.T) {
+	for _, test := range []struct {
+		name         string
+		found        bool
+		claimErr     error
+		executeErr   error
+		wantWorked   bool
+		wantErr      bool
+		wantComplete bool
+	}{
+		{name: "idle"},
+		{name: "claim failure", claimErr: errors.New("claim"), wantErr: true},
+		{name: "execution failure", found: true, executeErr: errors.New("apply"), wantWorked: true, wantErr: true},
+		{name: "applied", found: true, wantWorked: true, wantComplete: true},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			now := time.Date(2026, time.September, 14, 12, 0, 0, 0, time.UTC)
+			claimer := &testClaimer{
+				found: test.found, claimErr: test.claimErr, now: now,
+				claim: Claim{
+					Operation: operationjournal.Operation{ID: testOperationID, State: operationjournal.StateApplying},
+					Fence: operationjournal.WriterFence{HolderID: testWriterID, Token: testFenceToken, Epoch: 1, AcquiredAt: now.Add(-time.Second), ExpiresAt: now.Add(time.Minute)},
+				},
+			}
+			executor := &testExecutor{err: test.executeErr}
+			worker := Worker{Claimer: claimer, Executor: executor, WorkerID: testWriterID, LeaseFor: time.Minute, Clock: func() time.Time { return now }}
+			worked, err := worker.RunOnce(context.Background(), now)
+			if worked != test.wantWorked || (err != nil) != test.wantErr || claimer.completed != test.wantComplete {
+				t.Fatalf("worked=%v err=%v completed=%v", worked, err, claimer.completed)
+			}
+			if executor.called != (test.found && test.claimErr == nil) {
+				t.Fatalf("executor called=%v", executor.called)
+			}
+		})
+	}
+}
+
+func TestWorkerRejectsInvalidClaimBeforeProviderWrite(t *testing.T) {
+	now := time.Date(2026, time.September, 14, 12, 0, 0, 0, time.UTC)
+	for _, test := range []struct {
+		name  string
+		fence operationjournal.WriterFence
+	}{
+		{name: "expired", fence: operationjournal.WriterFence{HolderID: testWriterID, Token: "token", Epoch: 1, AcquiredAt: now.Add(-time.Minute), ExpiresAt: now}},
+		{name: "future", fence: operationjournal.WriterFence{HolderID: testWriterID, Token: "token", Epoch: 1, AcquiredAt: now.Add(time.Minute), ExpiresAt: now.Add(2 * time.Minute)}},
+		{name: "wrong holder", fence: operationjournal.WriterFence{HolderID: "worker-2", Token: "token", Epoch: 1, AcquiredAt: now.Add(-time.Second), ExpiresAt: now.Add(time.Minute)}},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			claimer := &testClaimer{
+				found: true, now: now,
+				claim: Claim{Operation: operationjournal.Operation{ID: testOperationID, State: operationjournal.StateApplying}, Fence: test.fence},
+			}
+			executor := &testExecutor{}
+			worker := Worker{Claimer: claimer, Executor: executor, WorkerID: testWriterID, LeaseFor: time.Minute, Clock: func() time.Time { return now }}
+			worked, err := worker.RunOnce(context.Background(), now)
+			if !worked || err == nil || executor.called || claimer.completed {
+				t.Fatalf("worked=%v err=%v called=%v completed=%v", worked, err, executor.called, claimer.completed)
+			}
+		})
+	}
+}
+
+func TestWorkerRejectsInvalidConfiguration(t *testing.T) {
+	now := time.Date(2026, time.September, 14, 12, 0, 0, 0, time.UTC)
+	valid := Worker{Claimer: &testClaimer{}, Executor: &testExecutor{}, WorkerID: testWriterID, LeaseFor: time.Minute}
+	for _, test := range []struct {
+		name    string
+		context context.Context
+		worker  Worker
+	}{
+		{name: "nil context", worker: valid},
+		{name: "nil claimer", context: context.Background(), worker: Worker{Executor: &testExecutor{}, WorkerID: testWriterID, LeaseFor: time.Minute}},
+		{name: "nil executor", context: context.Background(), worker: Worker{Claimer: &testClaimer{}, WorkerID: testWriterID, LeaseFor: time.Minute}},
+		{name: "blank worker", context: context.Background(), worker: Worker{Claimer: &testClaimer{}, Executor: &testExecutor{}, LeaseFor: time.Minute}},
+		{name: "invalid lease", context: context.Background(), worker: Worker{Claimer: &testClaimer{}, Executor: &testExecutor{}, WorkerID: testWriterID}},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			if worked, err := test.worker.RunOnce(test.context, now); worked || err == nil {
+				t.Fatalf("worked=%v err=%v", worked, err)
+			}
+		})
+	}
+}
+
+func TestWorkerDoesNotCompleteAfterLeaseExpiry(t *testing.T) {
+	claimedAt := time.Date(2026, time.September, 14, 12, 0, 0, 0, time.UTC)
+	claimer := &testClaimer{
+		found: true, now: claimedAt.Add(2 * time.Minute),
+		claim: Claim{
+			Operation: operationjournal.Operation{ID: testOperationID, State: operationjournal.StateApplying},
+			Fence: operationjournal.WriterFence{
+				HolderID: testWriterID, Token: testFenceToken, Epoch: 1,
+				AcquiredAt: claimedAt.Add(-time.Second), ExpiresAt: claimedAt.Add(time.Minute),
+			},
+		},
+	}
+	clockCalls := 0
+	worker := Worker{
+		Claimer: claimer, Executor: &testExecutor{}, WorkerID: testWriterID, LeaseFor: time.Minute,
+		Clock: func() time.Time {
+			clockCalls++
+			if clockCalls == 1 {
+				return claimedAt
+			}
+			return claimedAt.Add(2 * time.Minute)
+		},
+	}
+	worked, err := worker.RunOnce(context.Background(), claimedAt)
+	if !worked || err == nil || claimer.completed {
+		t.Fatalf("worked=%v err=%v completed=%v", worked, err, claimer.completed)
+	}
+}
+
+func TestWorkerRejectsClaimThatExpiredWhileClaiming(t *testing.T) {
+	requestedAt := time.Date(2026, time.September, 14, 12, 0, 0, 0, time.UTC)
+	claimer := &testClaimer{
+		found: true, now: requestedAt.Add(2 * time.Minute),
+		claim: Claim{
+			Operation: operationjournal.Operation{ID: testOperationID, State: operationjournal.StateApplying},
+			Fence: operationjournal.WriterFence{
+				HolderID: testWriterID, Token: testFenceToken, Epoch: 1,
+				AcquiredAt: requestedAt.Add(-time.Second), ExpiresAt: requestedAt.Add(time.Minute),
+			},
+		},
+	}
+	executor := &testExecutor{}
+	worker := Worker{
+		Claimer: claimer, Executor: executor, WorkerID: testWriterID, LeaseFor: time.Minute,
+		Clock: func() time.Time { return requestedAt.Add(2 * time.Minute) },
+	}
+	worked, err := worker.RunOnce(context.Background(), requestedAt)
+	if !worked || err == nil || executor.called || claimer.completed {
+		t.Fatalf("worked=%v err=%v called=%v completed=%v", worked, err, executor.called, claimer.completed)
+	}
+}

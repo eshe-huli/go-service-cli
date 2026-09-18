@@ -9,20 +9,30 @@ model and architecture policy in internal/project. Both generation and checking 
 continue to agree. The command grammar is declared in internal/cli/spec.go and reused
 by parsing, help and machine-readable discovery.
 
+Capabilities are versioned project contracts declared in `gsvc.json`. Their catalog,
+recipe compositions, generated outputs, validation, and upgrade rules live under
+`internal/project`; do not create a second recipe state file. Recipes may only union
+typed capabilities and must use the ordinary dry-run/plan/expect writer. Concrete
+provider, broker, database, credential, and business-policy implementations remain
+developer-owned and must never be implied by a declared contract.
+
 Treat developer-owned content as non-regenerable. Do not introduce a --force path that
 overwrites business files, resets hashes, silently adopts files, weakens checks, or
 swallows invalid configuration. Exercise failures and complete generated applications,
 not merely template snapshots.
 
 Runtime helpers are real source under internal/assets/runtime and embedded into
-managed generated output. Update their tests before changing behavior. A runtime or
-template change requires recreating the example with the current generator, preserving
-its separately authored application implementation/test files, and rerunning its gate.
+managed generated output. Update their tests before changing behavior. A runtime,
+capability, or template change requires recreating the example with the current
+generator, preserving its separately authored application implementation/test files,
+and rerunning its gate.
 
 Use standard Go tooling, explicit constructors and errors. No third-party dependency
-is required for this CLI. Do not add runtime DI, a general plugin system, new database
-stacks, company-specific identity rules or copied features without a concrete approved
-requirement. Supported business-operation changes are different from policy changes.
+is required for this CLI. Do not add runtime DI, a general plugin system, silent
+dependency installation, new database stacks, company-specific identity rules or
+copied features without a concrete approved requirement. Supported business-operation
+changes are different from policy changes. Capability output must say what remains
+unimplemented and unproven.
 
 Before completing a CLI change:
 

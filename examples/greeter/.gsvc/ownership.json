@@ -1,14 +1,14 @@
 {
-  "schema_version": 1,
-  "tool_version": "0.1.0",
-  "manifest_sha256": "2b2d0bd087a740bdf7953626e3e667db743593e775f7c454c093ed0ce8a75a66",
+  "schema_version": 2,
+  "tool_version": "0.2.0",
+  "manifest_sha256": "bc060d319219777f5b319d46088741899eeeb7590b05c27686e6a66a097af3c4",
   "files": {
     ".gitignore": {
       "owner": "developer"
     },
     "AGENTS.md": {
       "owner": "generated",
-      "sha256": "78db1ba2f03f7a15f1b829f9dfe478d621b38de41e189fd6477a82043b5af068"
+      "sha256": "f7f1bdf6d8ea812f5ab1e62a5b3754a19ed45e38a68d6076104da17aeb793b53"
     },
     "CLAUDE.md": {
       "owner": "generated",
@@ -28,22 +28,22 @@
     },
     "internal/bootstrap/routes_gen.go": {
       "owner": "generated",
-      "sha256": "3faa71424aa63365648d40df2a22351007af62dcf1d44889b94748c8a0a38267"
+      "sha256": "8dcaf2950c84aebee3d85e0bf7ac42b5e7a510d56a76b3ad1be400fd954e645c"
     },
     "internal/bootstrap/routes_gen_test.go": {
       "owner": "generated",
-      "sha256": "afb10118f37f7385391c4718030a21092b2d3e4566c068216e726b597ceda959"
+      "sha256": "0ecefbaea68ff78bd7ffbe624432a1a36b8dd645daef580f69c6e77295f0014b"
     },
     "internal/bootstrap/wire.go": {
       "owner": "developer"
     },
     "internal/greetings/internal/adapter/httpapi/routes_gen.go": {
       "owner": "generated",
-      "sha256": "02c3db43d1443a3085949d314cd583b40bc17c652152c3a79bb1991f772fe817"
+      "sha256": "43e20368c43c2e1bf99592e5f6d380c38b4e507aa0ee2cee75b9606ace2dd7c6"
     },
     "internal/greetings/internal/adapter/httpapi/routes_gen_test.go": {
       "owner": "generated",
-      "sha256": "88f6838a73653c01731909144fa6176feb4f76a914cccd4eba9b452735cbee4d"
+      "sha256": "ed36d6b88fb030bc47c84e29c10d4b19e3762f14fb4fe4c5247b1136dd24a70e"
     },
     "internal/greetings/internal/adapter/postgres/doc.go": {
       "owner": "developer"
@@ -56,7 +56,7 @@
     },
     "internal/greetings/internal/app/greet_person_contract_gen.go": {
       "owner": "generated",
-      "sha256": "3c2012224557d732128dc003e28393413db8a3012edd7a068c0b6b9c5ef9c53e"
+      "sha256": "09802587ae34e39067f0ad01879779babe74afa11076ea78307b82ebbf16b48e"
     },
     "internal/greetings/internal/app/greet_person_test.go": {
       "owner": "developer"
@@ -69,31 +69,31 @@
     },
     "internal/greetings/module_gen.go": {
       "owner": "generated",
-      "sha256": "0ea0511e036da52cf24cf9087c04af8d04ae07925b6deed40d76548e89df0f28"
+      "sha256": "d4580971b6e36227ce5eeed7ebf9767633f3963396efa7b3e84c950be7bfb317"
     },
     "internal/platform/fault/fault.go": {
       "owner": "generated",
-      "sha256": "dfb7fb377125bf26d4574bc2218e3b1f5b9457a887565b8748668c0adebe9deb"
+      "sha256": "9486e72f780263b18152fae7869d42f5758b23272b7d96980c7684bbc281d437"
     },
     "internal/platform/fault/fault_test.go": {
       "owner": "generated",
-      "sha256": "51e3f6e893cd2de17bae747ba23080b90965205f1208340efbb7f8bb4825398a"
+      "sha256": "5fb6eb2caed343425b89142c0b348f6cd7a02af0d8c59215e052d188f9416d9e"
     },
     "internal/platform/httpx/httpx.go": {
       "owner": "generated",
-      "sha256": "0f2d6aefd0e9b057a6747226dd2416b748a8445c161dcfd0e7be3ffe249f5247"
+      "sha256": "30dba5c0e23be38ad9aa64b06ca5c1bd898a7289758d924d6916d687eddde0e3"
     },
     "internal/platform/httpx/httpx_test.go": {
       "owner": "generated",
-      "sha256": "2f1a9286c00b238cbfc09a4838b9194437f10a77c9a760c9eab2f65febc9e9e2"
+      "sha256": "e0655127737efd8c23376fc1638d1dda5666e20ee7e27b5ba2b48a21edde313f"
     },
     "internal/platform/validate/validate.go": {
       "owner": "generated",
-      "sha256": "930a62c30007f77f92c564b4a7606887a0515af1b7b30a2e14447b14db9925c1"
+      "sha256": "cd8fd832200e94d0031ee12815e3796d24e46f847d40d03ac2e615de20c174fe"
     },
     "internal/platform/validate/validate_test.go": {
       "owner": "generated",
-      "sha256": "5d9e203a86a1135dd5dd2ada1a83ddf1c24e1788b936185f446607a0eed2f273"
+      "sha256": "35b2b82f2b5a84d88ff042b9b66f244ff379482ac7db93ca23cdd077a4ab2eb0"
     }
   }
 }

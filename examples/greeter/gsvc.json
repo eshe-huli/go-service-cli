@@ -1,9 +1,10 @@
 {
-  "schema_version": 1,
-  "tool_version": "0.1.0",
-  "policy": "go-service/v1",
+  "schema_version": 2,
+  "tool_version": "0.2.0",
+  "policy": "go-service/v2",
   "service": "greeter",
   "go_module": "example.com/greeter",
+  "capabilities": [],
   "modules": [
     {
       "name": "greetings",

@@ -1,0 +1,79 @@
+package reconciliation
+
+import (
+	"context"
+	"errors"
+	"strings"
+	"time"
+
+	"{{.Project.GoModule}}/internal/platform/operationjournal"
+)
+
+type Claim = operationjournal.Claim
+type Completion = operationjournal.Completion
+type Outcome = operationjournal.Outcome
+type OutcomeKind = operationjournal.OutcomeKind
+
+const (
+	OutcomeApplied          = operationjournal.OutcomeApplied
+	OutcomeRetryable        = operationjournal.OutcomeRetryable
+	OutcomeSuperseded       = operationjournal.OutcomeSuperseded
+	OutcomeTerminal         = operationjournal.OutcomeTerminal
+	OutcomeOperatorRequired = operationjournal.OutcomeOperatorRequired
+)
+
+type Claimer interface {
+	ClaimDue(context.Context, string, time.Time, time.Duration) (Claim, bool, error)
+	Complete(context.Context, Completion) error
+}
+
+type Executor interface {
+	Apply(context.Context, Claim) (Outcome, error)
+}
+
+type Worker struct {
+	Claimer  Claimer
+	Executor Executor
+	WorkerID string
+	LeaseFor time.Duration
+	Clock    func() time.Time
+}
+
+func (w Worker) RunOnce(ctx context.Context, now time.Time) (bool, error) {
+	if ctx == nil {
+		return false, errors.New("worker context is required")
+	}
+	if w.Claimer == nil || w.Executor == nil {
+		return false, errors.New("worker claimer and executor are required")
+	}
+	if strings.TrimSpace(w.WorkerID) == "" || w.LeaseFor <= 0 || now.IsZero() {
+		return false, errors.New("worker id, positive lease duration, and current time are required")
+	}
+	claim, found, err := w.Claimer.ClaimDue(ctx, w.WorkerID, now, w.LeaseFor)
+	if err != nil || !found {
+		return found, err
+	}
+	validatedAt := time.Now()
+	if w.Clock != nil {
+		validatedAt = w.Clock()
+	}
+	if err = claim.Validate(validatedAt); err != nil {
+		return true, err
+	}
+	if claim.Fence.HolderID != w.WorkerID {
+		return true, errors.New("claim fence belongs to a different writer")
+	}
+	outcome, err := w.Executor.Apply(ctx, claim)
+	if err != nil {
+		return true, err
+	}
+	completedAt := time.Now()
+	if w.Clock != nil {
+		completedAt = w.Clock()
+	}
+	completion, err := operationjournal.NewCompletion(claim, outcome, completedAt)
+	if err != nil {
+		return true, err
+	}
+	return true, w.Claimer.Complete(ctx, completion)
+}

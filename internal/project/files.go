@@ -282,6 +282,8 @@ type journal struct {
 	Files         []journalFile `json:"files"`
 }
 
+const journalSchemaVersion = 1
+
 func pending(c Change) bool {
 	return c.Action == "create" || c.Action == "update" || c.Action == "delete"
 }
@@ -375,7 +377,7 @@ func Apply(plan Plan, expected string) error {
 	if err = preflight(plan); err != nil {
 		return err
 	}
-	j := journal{SchemaVersion: SchemaVersion, Files: []journalFile{}}
+	j := journal{SchemaVersion: journalSchemaVersion, Files: []journalFile{}}
 	for _, c := range plan.Changes {
 		if pending(c) {
 			j.Files = append(j.Files, journalFile{c.Path, c.Before, c.BeforeSHA256 != "", c.AfterSHA256})
@@ -448,7 +450,7 @@ func Recover(root string, dry bool) (any, error) {
 	if err = DecodeStrict(b, &j); err != nil {
 		return nil, err
 	}
-	if j.SchemaVersion != SchemaVersion {
+	if j.SchemaVersion != journalSchemaVersion {
 		return nil, Fail("TXN004", "unsupported recovery journal", "")
 	}
 	for _, f := range j.Files {

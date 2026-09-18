@@ -14,6 +14,11 @@ import (
 	"gsvc.local/cli/internal/project"
 )
 
+const (
+	flagDryRun             = "--dry-run"
+	identityProviderRecipe = "identity-provider-orchestrator"
+)
+
 func call(t *testing.T, want int, args ...string) map[string]any {
 	t.Helper()
 	var stdout, stderr bytes.Buffer
@@ -55,12 +60,13 @@ func diagnosticCodes(data map[string]any) string { b, _ := json.Marshal(data); r
 
 func TestMachineProtocol(t *testing.T) {
 	call(t, 0, "contract")
+	call(t, 0, "recipe")
 	call(t, 0, "version")
 	call(t, 2, "nonsense")
 	call(t, 2, "add", "command", "x")
 	call(t, 2, "version", "--unknown")
 	root := filepath.Join(t.TempDir(), "new-api")
-	data := call(t, 0, "init", root, "--module", "example.com/new-api", "--dry-run")
+	data := call(t, 0, "init", root, "--module", "example.com/new-api", flagDryRun)
 	if _, err := os.Stat(root); !os.IsNotExist(err) {
 		t.Fatal("dry-run created root")
 	}
@@ -68,6 +74,194 @@ func TestMachineProtocol(t *testing.T) {
 	call(t, 3, "init", root, "--module", "example.com/new-api", "--expect", "wrong")
 	call(t, 0, "init", root, "--module", "example.com/new-api", "--expect", id)
 	call(t, 0, "check", "--root", root, "--strict")
+}
+
+func TestRecipeUsesGuardedPlanAndIsIdempotent(t *testing.T) {
+	root := newService(t)
+	manifestPath := filepath.Join(root, project.ManifestPath)
+	before, err := os.ReadFile(manifestPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	data := call(t, 0, "recipe", identityProviderRecipe, "--root", root, flagDryRun)
+	afterDryRun, err := os.ReadFile(manifestPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(before, afterDryRun) {
+		t.Fatal("recipe dry-run changed the project")
+	}
+	planID := data["data"].(map[string]any)["plan"].(map[string]any)["id"].(string)
+	call(t, 3, "recipe", identityProviderRecipe, "--root", root, "--expect", "wrong")
+	call(t, 0, "recipe", identityProviderRecipe, "--root", root, "--expect", planID)
+	capabilities := call(t, 0, "capabilities", "--root", root)
+	if !strings.Contains(diagnosticCodes(capabilities), `"status":"declared"`) || !strings.Contains(diagnosticCodes(capabilities), "CAPABILITY004") {
+		t.Fatalf("capability inspection omitted declaration or proof gap: %v", capabilities)
+	}
+	call(t, 0, "recipe", identityProviderRecipe, "--root", root)
+	call(t, 0, "check", "--root", root, "--verify")
+	strict := call(t, 0, "check", "--root", root, "--strict")
+	if !strings.Contains(diagnosticCodes(strict), "CAPABILITY004") {
+		t.Fatalf("strict source gate hid the external runtime-proof boundary: %v", strict)
+	}
+
+	applied, err := os.ReadFile(manifestPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(applied), `"id": "identity-provider.port"`) {
+		t.Fatal("recipe capability was not declared")
+	}
+}
+
+func TestCapabilitiesDetectMissingGeneratedContract(t *testing.T) {
+	root := newService(t)
+	call(t, 0, "recipe", identityProviderRecipe, "--root", root)
+	if err := os.Remove(filepath.Join(root, "internal/platform/identityprovider/contracts_gen.go")); err != nil {
+		t.Fatal(err)
+	}
+	data := call(t, 1, "capabilities", "--root", root)
+	if !strings.Contains(diagnosticCodes(data), "OWN003") {
+		t.Fatalf("capabilities command hid missing contract output: %v", data)
+	}
+}
+
+func TestCapabilityPolicyAllowsOnlyDeclaredImplementationBoundaries(t *testing.T) {
+	root := newService(t)
+	call(t, 0, "recipe", identityProviderRecipe, "--root", root)
+	call(t, 0, "add", "module", "projection", "--root", root)
+
+	writeGo(t, root, "internal/projection/internal/app/provider_port.go", `package app
+import "example.com/demo/internal/platform/identityprovider"
+var _ identityprovider.Adapter
+`)
+	writeGo(t, root, "internal/platform/identityprovider/adapter/httpjson/adapter.go", `package httpjson
+import (
+    "net/http"
+    "example.com/demo/internal/platform/identityprovider"
+)
+var _ = http.MethodGet
+var _ identityprovider.Adapter
+`)
+	writeGo(t, root, "internal/platform/inbox/adapter/kafka/consumer.go", `package kafka
+import _ "github.com/twmb/franz-go/pkg/kgo"
+`)
+	writeGo(t, root, "internal/platform/inbox/adapter/http/handler.go", `package httpadapter
+import (
+    stdhttp "net/http"
+    "example.com/demo/internal/platform/inbox"
+)
+var _ = stdhttp.MethodPost
+var _ inbox.AdmittedEvent
+`)
+	call(t, 0, "check", "--root", root)
+
+	badExternal := "internal/platform/identityprovider/adapter/httpjson/unapproved.go"
+	writeGo(t, root, badExternal, "package httpjson\nimport _ \"example.net/unapproved/sdk\"\n")
+	data := call(t, 1, "check", "--root", root)
+	if !strings.Contains(diagnosticCodes(data), "ARCH001") {
+		t.Fatalf("capability extension accepted an unapproved dependency: %v", data)
+	}
+	if err := os.Remove(filepath.Join(root, badExternal)); err != nil {
+		t.Fatal(err)
+	}
+
+	unrelated := "internal/platform/shared/bad.go"
+	writeGo(t, root, unrelated, "package shared\n")
+	data = call(t, 1, "check", "--root", root)
+	if !strings.Contains(diagnosticCodes(data), "LAYOUT003") {
+		t.Fatalf("capability extension opened the general platform tree: %v", data)
+	}
+}
+
+func TestCapabilityImplementationBoundaryRequiresDeclaration(t *testing.T) {
+	root := newService(t)
+	call(t, 0, "add", "module", "projection", "--root", root)
+	writeGo(t, root, "internal/projection/internal/app/provider_port.go", `package app
+import "example.com/demo/internal/platform/identityprovider"
+var _ identityprovider.Adapter
+`)
+	writeGo(t, root, "internal/platform/inbox/adapter/kafka/consumer.go", `package kafka
+import _ "github.com/twmb/franz-go/pkg/kgo"
+`)
+	data := call(t, 1, "check", "--root", root)
+	codes := diagnosticCodes(data)
+	if !strings.Contains(codes, "ARCH001") || !strings.Contains(codes, "LAYOUT003") {
+		t.Fatalf("undeclared capability paths or imports passed policy: %v", data)
+	}
+}
+
+func TestRecipeSymlinkPreflightWritesNothing(t *testing.T) {
+	root := newService(t)
+	target := t.TempDir()
+	link := filepath.Join(root, "internal", "platform", "identityprovider")
+	if err := os.MkdirAll(filepath.Dir(link), 0755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(target, link); err != nil {
+		t.Fatal(err)
+	}
+	manifestPath := filepath.Join(root, project.ManifestPath)
+	before, err := os.ReadFile(manifestPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	data := call(t, 3, "recipe", identityProviderRecipe, "--root", root)
+	if !strings.Contains(diagnosticCodes(data), "PATH002") {
+		t.Fatalf("missing symlink diagnostic: %v", data)
+	}
+	after, err := os.ReadFile(manifestPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(before, after) {
+		t.Fatal("conflicting recipe partially wrote the project")
+	}
+}
+
+func TestExplicitV1UpgradeUsesReviewedPlan(t *testing.T) {
+	root := newService(t)
+	loaded, err := project.Load(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	type legacyManifest struct {
+		SchemaVersion int              `json:"schema_version"`
+		ToolVersion   string           `json:"tool_version"`
+		Policy        string           `json:"policy"`
+		Service       string           `json:"service"`
+		GoModule      string           `json:"go_module"`
+		Modules       []project.Module `json:"modules"`
+	}
+	legacy := legacyManifest{
+		SchemaVersion: 1,
+		ToolVersion:   "0.1.0",
+		Policy:        "go-service/v1",
+		Service:       loaded.Manifest.Service,
+		GoModule:      loaded.Manifest.GoModule,
+		Modules:       loaded.Manifest.Modules,
+	}
+	legacyBytes := project.JSON(legacy)
+	state := loaded.State
+	state.SchemaVersion = 1
+	state.ToolVersion = "0.1.0"
+	state.ManifestSHA256 = project.Hash(legacyBytes)
+	if err = os.WriteFile(filepath.Join(root, project.ManifestPath), legacyBytes, 0644); err != nil {
+		t.Fatal(err)
+	}
+	if err = os.WriteFile(filepath.Join(root, project.StatePath), project.JSON(state), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	data := call(t, 0, "upgrade", "--root", root, flagDryRun)
+	planID := data["data"].(map[string]any)["plan"].(map[string]any)["id"].(string)
+	call(t, 3, "upgrade", "--root", root, "--expect", "wrong")
+	call(t, 0, "upgrade", "--root", root, "--expect", planID)
+	if _, err = project.Load(root); err != nil {
+		t.Fatalf("upgraded project did not load: %v", err)
+	}
+	call(t, 0, "upgrade", "--root", root)
 }
 func TestGeneratorCheckerAndGeneratedBuildAgree(t *testing.T) {
 	root := newService(t)
@@ -145,7 +339,7 @@ func TestArchitectureDrift(t *testing.T) {
 func TestStalePlanAndRouteChange(t *testing.T) {
 	root := newService(t)
 	call(t, 0, "add", "module", "greetings", "--root", root)
-	data := call(t, 0, "add", "query", "greet-person", "--module", "greetings", "--in", "name:string", "--out", "message:string", "--root", root, "--dry-run")
+	data := call(t, 0, "add", "query", "greet-person", "--module", "greetings", "--in", "name:string", "--out", "message:string", "--root", root, flagDryRun)
 	id := data["data"].(map[string]any)["plan"].(map[string]any)["id"].(string)
 	// A change to any tracked developer file invalidates the reviewed plan.
 	p := filepath.Join(root, "README.md")

@@ -1,0 +1,64 @@
+package commanding
+
+import (
+	"errors"
+	"strings"
+	"time"
+)
+
+// VerifiedPrincipal must be constructed by an adapter only after verifying its
+// credential, issuer, audience, expiry, and intended service scope.
+type VerifiedPrincipal struct {
+	Kind            PrincipalKind
+	SubjectID       string
+	BusinessID      string
+	ApplicationID   string
+	MachineID       string
+	AuthenticatedBy string
+}
+
+type PrincipalKind string
+
+const (
+	PrincipalSubject PrincipalKind = "subject"
+	PrincipalMachine PrincipalKind = "machine"
+)
+
+type Context struct {
+	Principal     VerifiedPrincipal
+	RequestID     string
+	CorrelationID string
+	CausationID   string
+	IdempotencyKey string
+	ReceivedAt    time.Time
+}
+
+func (c Context) Validate() error {
+	actor := strings.TrimSpace(c.Principal.SubjectID)
+	machine := strings.TrimSpace(c.Principal.MachineID)
+	switch c.Principal.Kind {
+	case PrincipalSubject:
+		if actor == "" || machine != "" {
+			return errors.New("subject principal requires only a subject id")
+		}
+	case PrincipalMachine:
+		if machine == "" || actor != "" {
+			return errors.New("machine principal requires only a machine id")
+		}
+	default:
+		return errors.New("principal kind is required")
+	}
+	if strings.TrimSpace(c.Principal.AuthenticatedBy) == "" {
+		return errors.New("authentication provenance is required")
+	}
+	if strings.TrimSpace(c.RequestID) == "" || strings.TrimSpace(c.CorrelationID) == "" {
+		return errors.New("request and correlation ids are required")
+	}
+	if strings.TrimSpace(c.IdempotencyKey) == "" {
+		return errors.New("idempotency key is required")
+	}
+	if c.ReceivedAt.IsZero() {
+		return errors.New("received time is required")
+	}
+	return nil
+}

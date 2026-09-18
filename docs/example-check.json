@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "tool": "gsvc",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "ok": true,
   "command": "check",
   "data": {
@@ -20,7 +20,7 @@
           "./..."
         ],
         "exit_code": 0,
-        "output": "?   \texample.com/greeter/cmd/api\t[no test files]\n?   \texample.com/greeter/internal/greetings\t[no test files]\n?   \texample.com/greeter/internal/greetings/internal/adapter/postgres\t[no test files]\nok  \texample.com/greeter/internal/bootstrap\t0.017s\nok  \texample.com/greeter/internal/greetings/internal/adapter/httpapi\t0.014s\nok  \texample.com/greeter/internal/greetings/internal/app\t0.013s\nok  \texample.com/greeter/internal/greetings/internal/domain\t0.006s\nok  \texample.com/greeter/internal/platform/fault\t0.004s\nok  \texample.com/greeter/internal/platform/httpx\t0.015s\nok  \texample.com/greeter/internal/platform/validate\t0.008s\n",
+        "output": "?   \texample.com/greeter/cmd/api\t[no test files]\nok  \texample.com/greeter/internal/bootstrap\t(cached)\n?   \texample.com/greeter/internal/greetings\t[no test files]\nok  \texample.com/greeter/internal/greetings/internal/adapter/httpapi\t(cached)\n?   \texample.com/greeter/internal/greetings/internal/adapter/postgres\t[no test files]\nok  \texample.com/greeter/internal/greetings/internal/app\t(cached)\nok  \texample.com/greeter/internal/greetings/internal/domain\t(cached)\nok  \texample.com/greeter/internal/platform/fault\t(cached)\nok  \texample.com/greeter/internal/platform/httpx\t(cached)\nok  \texample.com/greeter/internal/platform/validate\t(cached)\n",
         "truncated": false
       },
       {

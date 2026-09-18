@@ -1,0 +1,163 @@
+package operationjournal
+
+import (
+	"context"
+	"crypto/sha256"
+	"encoding/hex"
+	"errors"
+	"strconv"
+	"strings"
+	"time"
+)
+
+type State string
+
+const (
+	StatePending          State = "pending"
+	StateApplying         State = "applying"
+	StateRetryable        State = "retryable"
+	StateApplied          State = "applied"
+	StateSuperseded       State = "superseded"
+	StateTerminal         State = "terminal"
+	StateOperatorRequired State = "operator_required"
+)
+
+type Operation struct {
+	ID             string
+	ResourceType   string
+	ResourceKey    string
+	DesiredVersion int64
+	State          State
+	AttemptCount   int
+	NextAttemptAt  time.Time
+	ProviderRef    string
+	ReceiptRef     string
+	ErrorCode      string
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+}
+
+func DeterministicID(namespace, resourceType, resourceKey string, desiredVersion int64) string {
+	parts := []string{strings.TrimSpace(namespace), strings.TrimSpace(resourceType), strings.TrimSpace(resourceKey), strconv.FormatInt(desiredVersion, 10)}
+	sum := sha256.Sum256([]byte(strings.Join(parts, "\x00")))
+	return hex.EncodeToString(sum[:])
+}
+
+// WriterFence is the compare-and-set identity of one active journal claim.
+// Durable adapters must match operation id, holder, epoch, and token when they
+// complete a claim; checking only an operation id permits stale writers.
+type WriterFence struct {
+	HolderID   string
+	Token      string
+	Epoch      uint64
+	AcquiredAt time.Time
+	ExpiresAt  time.Time
+}
+
+func (f WriterFence) Validate(now time.Time) error {
+	if strings.TrimSpace(f.HolderID) == "" || strings.TrimSpace(f.Token) == "" || f.Epoch == 0 {
+		return errors.New("writer holder, token, and epoch are required")
+	}
+	if f.AcquiredAt.IsZero() || f.ExpiresAt.IsZero() || !f.AcquiredAt.Before(f.ExpiresAt) {
+		return errors.New("valid writer fence interval is required")
+	}
+	if now.Before(f.AcquiredAt) || !now.Before(f.ExpiresAt) {
+		return errors.New("writer fence is not active")
+	}
+	return nil
+}
+
+func (f WriterFence) SameGeneration(other WriterFence) bool {
+	return f.HolderID == other.HolderID && f.Token == other.Token && f.Epoch == other.Epoch
+}
+
+type Claim struct {
+	Operation Operation
+	Fence     WriterFence
+}
+
+func (c Claim) Validate(now time.Time) error {
+	if strings.TrimSpace(c.Operation.ID) == "" || c.Operation.State != StateApplying {
+		return errors.New("claim requires an applying operation")
+	}
+	return c.Fence.Validate(now)
+}
+
+type OutcomeKind string
+
+const (
+	OutcomeApplied          OutcomeKind = "applied"
+	OutcomeRetryable        OutcomeKind = "retryable"
+	OutcomeSuperseded       OutcomeKind = "superseded"
+	OutcomeTerminal         OutcomeKind = "terminal"
+	OutcomeOperatorRequired OutcomeKind = "operator_required"
+)
+
+type Outcome struct {
+	Kind        OutcomeKind
+	ProviderRef string
+	ReceiptRef  string
+	ErrorCode   string
+	RetryAt     time.Time
+}
+
+func (o Outcome) Validate(completedAt time.Time) error {
+	switch o.Kind {
+	case OutcomeApplied, OutcomeSuperseded, OutcomeTerminal, OutcomeOperatorRequired:
+		if !o.RetryAt.IsZero() {
+			return errors.New("non-retryable outcome cannot carry retry time")
+		}
+	case OutcomeRetryable:
+		if o.RetryAt.IsZero() || !completedAt.Before(o.RetryAt) {
+			return errors.New("retryable outcome requires a future retry time")
+		}
+	default:
+		return errors.New("recognized outcome kind is required")
+	}
+	return nil
+}
+
+// Completion carries the exact claim fence used for a provider attempt.
+// Repository implementations must compare-and-set all fence fields before
+// persisting the outcome.
+type Completion struct {
+	OperationID string
+	Fence       WriterFence
+	Outcome     Outcome
+	CompletedAt time.Time
+}
+
+func NewCompletion(claim Claim, outcome Outcome, completedAt time.Time) (Completion, error) {
+	if completedAt.IsZero() {
+		return Completion{}, errors.New("completion time is required")
+	}
+	if err := claim.Validate(completedAt); err != nil {
+		return Completion{}, err
+	}
+	if err := outcome.Validate(completedAt); err != nil {
+		return Completion{}, err
+	}
+	return Completion{OperationID: claim.Operation.ID, Fence: claim.Fence, Outcome: outcome, CompletedAt: completedAt}, nil
+}
+
+// ValidateAgainst is the reusable stale-writer guard for journal adapters.
+// The database update still must use the same fields in its CAS predicate.
+func (c Completion) ValidateAgainst(current Claim, now time.Time) error {
+	if err := current.Validate(now); err != nil {
+		return err
+	}
+	if c.OperationID != current.Operation.ID || !c.Fence.SameGeneration(current.Fence) {
+		return errors.New("completion fence does not match the current claim")
+	}
+	if c.CompletedAt.IsZero() || c.CompletedAt.After(now) || !c.CompletedAt.Before(current.Fence.ExpiresAt) {
+		return errors.New("completion time is outside the current claim")
+	}
+	return c.Outcome.Validate(c.CompletedAt)
+}
+
+type Repository interface {
+	RecordDesired(context.Context, Operation) (Operation, error)
+	ClaimDue(context.Context, string, time.Time, time.Duration) (Claim, bool, error)
+	Complete(context.Context, Completion) error
+	Find(context.Context, string) (Operation, bool, error)
+}

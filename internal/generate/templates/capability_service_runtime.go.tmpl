@@ -1,0 +1,28 @@
+package serviceinfo
+
+// Capability is a declared structural contract. It is not evidence that a
+// backing dependency, adapter, deployment, or authorized business flow works.
+type Capability struct {
+	ID      string
+	Version int
+}
+
+type Manifest struct {
+	Service            string
+	GoModule           string
+	ArchitecturePolicy string
+	Capabilities       []Capability
+}
+
+func Current() Manifest {
+	return Manifest{
+		Service:            {{quote .Project.Service}},
+		GoModule:           {{quote .Project.GoModule}},
+		ArchitecturePolicy: {{quote .Project.Policy}},
+		Capabilities: []Capability{
+			{{- range .Project.Capabilities}}
+			{ID: {{quote .ID}}, Version: {{.Version}}},
+			{{- end}}
+		},
+	}
+}

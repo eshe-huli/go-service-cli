@@ -15,11 +15,12 @@ type Flag struct {
 	Required    bool   `json:"required,omitempty"`
 }
 type Command struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Argument    string `json:"argument,omitempty"`
-	Mutation    bool   `json:"mutation"`
-	Flags       []Flag `json:"flags"`
+	Name             string `json:"name"`
+	Description      string `json:"description"`
+	Argument         string `json:"argument,omitempty"`
+	OptionalArgument bool   `json:"optional_argument,omitempty"`
+	Mutation         bool   `json:"mutation"`
+	Flags            []Flag `json:"flags"`
 }
 
 func flags(extra ...Flag) []Flag {
@@ -43,7 +44,10 @@ func Commands() []Command {
 		{Name: "add endpoint", Description: "Bind an existing operation (POST command / GET query)", Argument: "operation", Mutation: true, Flags: mutationFlags(Flag{Name: "module", Type: "string", Required: true, Description: "Existing business module"}, Flag{Name: "path", Type: "string", Required: true, Description: "HTTP path, e.g. /payments or /payments/{id}"})},
 		{Name: "change operation", Description: "Explicitly change operation fields; preserve business implementations and tests", Argument: "name", Mutation: true, Flags: mutationFlags(Flag{Name: "module", Type: "string", Required: true, Description: "Existing business module"}, Flag{Name: "in", Type: "string", Description: "Replace inputs; omit to preserve, empty string to clear"}, Flag{Name: "out", Type: "string", Description: "Replace outputs; omit to preserve, empty string to clear"})},
 		{Name: "change endpoint", Description: "Explicitly change an existing route path; preserve operation behavior", Argument: "operation", Mutation: true, Flags: mutationFlags(Flag{Name: "module", Type: "string", Required: true, Description: "Existing business module"}, Flag{Name: "path", Type: "string", Required: true, Description: "New endpoint path"})},
+		{Name: "upgrade", Description: "Explicitly migrate a supported older project contract to this CLI version", Mutation: true, Flags: mutationFlags()},
 		{Name: "sync", Description: "Reconcile managed output without overwriting developer-owned code", Mutation: true, Flags: mutationFlags()},
+		{Name: "recipe", Description: "List or apply a typed capability recipe through the guarded project plan", Argument: "name", OptionalArgument: true, Mutation: true, Flags: mutationFlags()},
+		{Name: "capabilities", Description: "Inspect declared capability contracts and their scaffold status", Flags: flags(rootFlag())},
 		{Name: "inspect", Description: "Expose the live project model, ownership, policy and diagnostics", Flags: flags(rootFlag())},
 		{Name: "check", Description: "Check generated integrity, layout, imports, formatting and pending work", Flags: flags(rootFlag(), Flag{Name: "strict", Type: "boolean", Description: "Fail on pending scaffolds and test skips"}, Flag{Name: "verify", Type: "boolean", Description: "Also execute go test ./... and go vet ./..."}, Flag{Name: "race", Type: "boolean", Description: "Use go test -race; requires --verify"})},
 		{Name: "recover", Description: "Roll back an interrupted CLI write without overwriting unrelated edits", Mutation: true, Flags: flags(rootFlag(), Flag{Name: "dry-run", Type: "boolean", Description: "List recovery targets without writing"})},
@@ -131,14 +135,17 @@ func parse(args []string) (parsed, error) {
 	if p.Help {
 		return p, nil
 	}
-	want := 0
+	minimum, maximum := 0, 0
 	if p.Spec.Argument != "" {
-		want = 1
+		maximum = 1
+		if !p.Spec.OptionalArgument {
+			minimum = 1
+		}
 	}
-	if len(positional) != want {
-		return p, project.Fail("USAGE003", fmt.Sprintf("%s expects %d positional argument(s)", name, want), "Flags may precede or follow the argument.")
+	if len(positional) < minimum || len(positional) > maximum {
+		return p, project.Fail("USAGE003", fmt.Sprintf("%s expects %d to %d positional argument(s)", name, minimum, maximum), "Flags may precede or follow the argument.")
 	}
-	if want == 1 {
+	if len(positional) == 1 {
 		p.Arg = positional[0]
 	}
 	for _, f := range p.Spec.Flags {
@@ -152,7 +159,7 @@ func parse(args []string) (parsed, error) {
 	return p, nil
 }
 func contract() any {
-	return map[string]any{"schema_version": 1, "tool": "gsvc", "version": project.Version, "policy": project.PolicyDescription(), "commands": Commands(), "field_types": []string{"string", "money", "bool", "int64"}, "exit_codes": map[string]string{"0": "success", "1": "check or execution failure", "2": "invalid command or configuration", "3": "ownership, plan, lock, or recovery conflict"}, "guarantees": []string{"no interactive prompts", "no shell execution or downloads during generation", "JSON mode emits one envelope, including failures", "dry-run does not create files", "identical structural commands are idempotent", "add rejects changed existing contracts; change performs explicit contract regeneration without migrating business behavior"}}
+	return map[string]any{"schema_version": 1, "tool": "gsvc", "version": project.Version, "project_schema_version": project.SchemaVersion, "policy": project.PolicyDescription(), "commands": Commands(), "field_types": []string{"string", "money", "bool", "int64"}, "capabilities": project.CapabilityCatalog(), "recipes": project.RecipeCatalog(), "capability_maturity": project.CapabilityMaturity, "exit_codes": map[string]string{"0": "success", "1": "check or execution failure", "2": "invalid command or configuration", "3": "ownership, plan, lock, or recovery conflict"}, "guarantees": []string{"no interactive prompts", "no shell execution or downloads during generation", "JSON mode emits one envelope, including failures", "dry-run does not create files", "identical structural commands and recipe applications are idempotent", "recipes only declare versioned capabilities; the renderer owns their contract files", "declared capabilities are contract scaffolds, not proof of runtime behavior", "add rejects changed existing contracts; change performs explicit contract regeneration without migrating business behavior"}}
 }
 func help(p parsed) string {
 	var b strings.Builder

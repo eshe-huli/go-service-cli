@@ -10,8 +10,9 @@ contracts are available and approved.
 
 ## The implementation
 
-`internal/project` defines the service model, fixed policy description, strict
-validation, ownership model, plan IDs, guarded writer, and recovery journal.
+`internal/project` defines the service model, typed capability and recipe catalogs,
+explicit v0.1-to-v0.2 migration, fixed policy description, strict validation,
+ownership model, plan IDs, guarded writer, and recovery journal.
 
 `internal/generate` embeds templates, renders the model, formats Go source, and labels
 each output as developer-owned or managed. It does not write files.
@@ -45,6 +46,7 @@ internal/payments/internal/adapter/
   httpapi/routes_gen.go                managed: HTTP binding
   postgres/                           developer: approved persistence boundary
 internal/platform/{fault,httpx,validate}/ managed helpers and their tests
+internal/platform/<capability>/          managed capability contracts and tests
 gsvc.json                             managed live model
 .gsvc/ownership.json                   managed ownership metadata
 AGENTS.md                             managed agent contract
@@ -67,8 +69,10 @@ Money is a decimal string. Syntax is validated on input; currency, rounding, pre
 arithmetic and business meaning are not implemented by the scaffold.
 
 No authentication, authorization, database client, migration engine, outbox, broker,
-tenant context or identity client is silently faked. The empty PostgreSQL package marks
-the approved adapter location, not a functioning persistence implementation.
+tenant context or identity client is silently faked. A capability recipe may generate
+typed contracts for one of these boundaries, but status `declared` never means the
+adapter, credential, durable store, worker, deployment, or actor flow exists. The empty
+PostgreSQL package marks the approved adapter location, not functioning persistence.
 
 The generated HTTP process sets server timeouts and supports graceful shutdown. This
 is not a production readiness claim, an authentication substitute, or a guarantee that
@@ -76,10 +80,18 @@ application operations honor cancellation. Health reports liveness only.
 
 ## Agent drift controls
 
-Discovery (`contract`, `inspect`) makes the supported workflow explicit. Generation
-makes that workflow easy. Ownership makes it safe to rerun. The checker reports
-violations. Strict verification distinguishes scaffolds from completed work. Required
-CI and review of the CLI/policy/metadata are the organizational enforcement layer.
+Discovery (`contract`, `inspect`, `capabilities`, and no-argument `recipe`) makes the
+supported workflow explicit. A recipe only unions versioned capabilities into the
+manifest; rendering derives their files, so recipe names are not a second source of
+state. Ownership makes application idempotent and safe to rerun. The checker reports
+drift. Capability declarations open only catalog-owned consumer imports, extension
+roots, and exact external import families; undeclared paths remain rejected. Strict
+verification distinguishes operation scaffolds from completed business work, while
+`CAPABILITY004` keeps its source-structure result visibly separate from runtime proof.
+Catalog-declared capability dependencies are also validated before rendering, so a
+composition cannot silently generate source that imports an undeclared primitive.
+Required CI and review of the CLI, policy, manifest, ownership metadata, adapters, and
+external operational evidence are the enforcement layer.
 
 An agent with permission to change everything can evade any local tool. Plan IDs and
 hashes detect stale state and content changes, not the authority of whoever changed
@@ -87,11 +99,12 @@ the state. This project makes no tamper-proof or security-sandbox claim.
 
 ## Extension order
 
-The next useful addition is a real PostgreSQL + pgx/sqlc vertical slice with transaction
-and integration tests, rather than many speculative recipes. Then add versioned API
-schema/export, contract evolution/removal workflows, runtime upgrades, and explicit
-security/platform adapters as actual service requirements justify them. These are
-future work, not features delivered in v0.1.
+The v0.2 catalog deliberately starts with six narrow contracts and two compositions,
+not a general plugin system. The next useful additions remain real PostgreSQL and
+broker vertical slices with transaction, restart, and integration tests; recipe
+catalog growth should follow proven service needs. Versioned API schema/export,
+contract removal, further migrations, and concrete security/platform adapters remain
+future work, not features implied by a capability declaration.
 
 ## Primary technical references
 
